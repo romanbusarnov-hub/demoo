@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Поиск налоговых схем</title>
+<style>
+:root{--bg:#fff;--ink:#1f2328;--mut:#5f6670;--line:#dcdfe3;--panel:#f5f6f8;--blue:#0072B2;--orange:#D55E00;--amber:#E69F00;--purple:#CC79A7;--green:#00875A;--red:#C62828;--sky:#56B4E9;--teal:#009E73}
+*{box-sizing:border-box}
+body{margin:0 0 40px;background:var(--bg);color:var(--ink);font:18px/1.5 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+header{padding:14px 24px 0;border-bottom:1px solid var(--line)}
+h1{font-size:23px;margin:0 0 2px}
+.sub{color:var(--mut);font-size:15px;margin-bottom:10px}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{font:inherit;font-size:17px;padding:9px 18px;border:1px solid var(--line);border-bottom:none;background:var(--panel);color:var(--ink);border-radius:8px 8px 0 0;cursor:pointer}
+nav button[aria-selected=true]{background:#fff;font-weight:700;border-color:#b9bec5;position:relative;top:1px}
+main{padding:18px 24px 10px;max-width:1240px;margin:0 auto}
+section{display:none}section.on{display:block}
+h2{font-size:21px;margin:18px 0 8px}
+.row{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}
+.col-main{flex:1 1 660px;min-width:300px}.col-side{flex:0 1 380px;min-width:280px}
+.panel{background:var(--panel);border-radius:10px;padding:14px 16px;font-size:16.5px}
+.panel h3{margin:0 0 8px;font-size:18px}
+.intro{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:0 0 16px}
+.intro .box{background:#fffaf0;border:1px solid #f0dcb4;border-radius:10px;padding:10px 14px;font-size:16px}
+.intro .box b.t{display:block;font-size:17px;margin-bottom:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.chips button,.btn{font:inherit;font-size:16px;padding:7px 15px;border:1px solid #b9bec5;background:#fff;border-radius:20px;cursor:pointer;color:var(--ink)}
+.chips button[aria-pressed=true],.btn[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.main{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.btn:disabled{opacity:.4;cursor:default}
+.stages{display:flex;gap:0;flex-wrap:wrap;margin:4px 0 12px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stages button{flex:1 1 180px;font:inherit;font-size:16px;padding:10px 12px;border:none;border-right:1px solid var(--line);background:#fff;cursor:pointer;text-align:left;color:var(--ink)}
+.stages button:last-child{border-right:none}
+.stages button .n{display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--panel);text-align:center;line-height:26px;font-weight:700;margin-right:8px}
+.stages button[aria-pressed=true]{background:#eef5fb;font-weight:700}
+.stages button[aria-pressed=true] .n{background:var(--blue);color:#fff}
+svg{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line);border-radius:10px}
+svg text{font-family:inherit;fill:var(--ink)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:15px;margin:8px 0;color:#333}
+.legend i{display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:5px;border:1px solid #999}
+.legend b.dash{display:inline-block;width:28px;border-top:3px dashed var(--red);vertical-align:4px;margin-right:5px}
+.legend b.solid{display:inline-block;width:28px;border-top:3px solid #8c8c8c;vertical-align:4px;margin-right:5px}
+table{border-collapse:collapse;width:100%;font-size:16px}
+td,th{padding:6px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:600;color:#333}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ok{color:var(--green);font-weight:700}.warn{color:var(--red);font-weight:700}.mut{color:var(--mut)}
+.say{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:10px 0;font-size:17px}
+.say p{margin:6px 0}
+.good{border-left:6px solid var(--green)}.bad{border-left:6px solid var(--red)}.neutral{border-left:6px solid var(--amber)}
+.big{font-size:30px;font-weight:700;line-height:1.15}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.card .cap{font-size:15px;color:#333}
+.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:6px 0 14px}
+.steps3 div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:16px}
+.steps3 b.k{display:inline-block;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;text-align:center;line-height:30px;margin-right:8px}
+.slider{display:flex;align-items:center;gap:12px;margin:8px 0 6px;flex-wrap:wrap}
+.slider input{flex:1;min-width:200px;accent-color:var(--red);height:30px}
+.slider output{min-width:80px;font-weight:700;font-size:24px;color:var(--red)}
+.feat{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line)}
+.pill{flex:0 0 46px;text-align:center;border-radius:12px;font-size:14px;font-weight:700;padding:2px 0;color:#fff}
+.pill.y{background:var(--red)}.pill.n{background:#9aa1a9}
+.bar{height:34px;display:flex;border-radius:6px;overflow:hidden;margin:8px 0;font-size:14px;color:#fff;font-weight:600}
+.bar span{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden}
+.books{display:grid;grid-template-columns:1fr 70px 1fr;gap:6px;align-items:stretch;margin:10px 0}
+.book{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15.5px}
+.book h4{margin:0 0 6px;font-size:16.5px}
+.book table{font-size:15px}.book td{padding:3px 4px}
+.book .diff{background:#fde7e7;color:var(--red);font-weight:700}
+.book.none{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--red);font-weight:700;border-style:dashed;border-color:var(--red);background:#fff6f6}
+.mid{display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700}
+.howto{counter-reset:k;list-style:none;padding:0;margin:6px 0}
+.howto li{margin:6px 0;padding-left:38px;position:relative}
+.howto li:before{counter-increment:k;content:counter(k);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;text-align:center;line-height:28px;font-weight:700;font-size:15px}
+.small{font-size:14.5px;color:var(--mut)}
+@media (max-width:700px){main{padding:12px}.books{grid-template-columns:1fr}.mid{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Как можно находить налоговые схемы: демонстрация</h1>
+  <div class="sub">Все фирмы и сделки придуманы программой. Настоящих налогоплательщиков здесь нет.</div>
+  <nav role="tablist" id="tabs"></nav>
+</header>
+<main>
+
+<!-- ================= 1. КТО КОМУ ПРОДАЛ ================= -->
+<section id="s-chain">
+  <div class="intro">
+    <div class="box"><b class="t">Продавец</b>Продаёт товар и берёт с покупателя цену плюс налог на добавленную стоимость (НДС). Этот НДС продавец <b>должен отдать государству</b>.</div>
+    <div class="box"><b class="t">Покупатель</b>Заплатил НДС в цене товара. Поэтому он может <b>уменьшить свой налог</b> на эту сумму. Это называется <b>вычет</b>.</div>
+    <div class="box"><b class="t">Налоговая</b>Сверяет две записи: у покупателя «я купил» (раздел 8 декларации), у продавца «я продал» (раздел 9). Нет пары — это <b>разрыв</b>.</div>
+    <div class="box"><b class="t">Схема</b>Продавец «продаёт» только на бумаге, налог не платит и исчезает. А покупатель всё равно уменьшает свой налог. Государство теряет деньги.</div>
+  </div>
+
+  <div class="chips" id="c-pick"></div>
+  <div class="stages" id="c-stages"></div>
+
+  <div class="row">
+    <div class="col-main">
+      <svg id="c-svg" viewBox="0 0 900 420" role="img" aria-label="Кто кому продал"></svg>
+      <div class="legend" id="c-legend"></div>
+    </div>
+    <div class="col-side"><div class="panel" id="c-side"></div></div>
+  </div>
+
+  <div id="c-answer"></div>
+  <div class="panel" style="margin-top:14px"><h3>Все сделки этого примера</h3><table id="c-table"></table></div>
+</section>
+
+<!-- ================= 2. ОДИН БИЗНЕС ================= -->
+<section id="s-frag">
+  <div class="intro">
+    <div class="box"><b class="t">Лимит</b>Пока доход фирмы за год меньше лимита (<span id="g-limit"></span>), она может работать на упрощённой системе, где налог обычно меньше. Превысила лимит — переходит на обычную систему.</div>
+    <div class="box"><b class="t">Как обходят лимит</b>Один бизнес оформляют как <b>несколько фирм</b>. У каждой доход чуть ниже лимита, хотя вместе они зарабатывают в разы больше.</div>
+    <div class="box"><b class="t">Как это заметить</b>Доходы всех фирм прижаты к лимиту, а у самих фирм много общего: адрес, владелец, работники, покупатели. Ниже — три примера.</div>
+  </div>
+  <div class="chips" id="g-pick"></div>
+  <div class="row">
+    <div class="col-main">
+      <h2 style="margin-top:4px">Доход каждой фирмы, в процентах от лимита</h2>
+      <svg id="g-svg1" viewBox="0 0 900 340" role="img" aria-label="Доход каждой фирмы по годам"></svg>
+      <div class="legend" id="g-legend"></div>
+      <h2>А если сложить доходы всех фирм группы?</h2>
+      <svg id="g-svg2" viewBox="0 0 900 230" role="img" aria-label="Сумма доходов группы"></svg>
+    </div>
+    <div class="col-side">
+      <div class="panel"><h3>Что общего у этих фирм</h3><div id="g-feat"></div></div>
+      <div class="panel" style="margin-top:12px"><h3>Как вы думаете?</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="g-one">Это один бизнес</button><button class="btn" id="g-many">Это разные фирмы</button></div>
+        <div id="g-ans"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. ПРАВИЛА ================= -->
+<section id="s-rules">
+  <h2 style="margin-top:0">Правило с порогом — самый простой способ искать нарушителей</h2>
+  <div class="steps3">
+    <div><b class="k">1</b><b>Берём один показатель.</b><br>Например, доход фирмы или долю налога, которую она «гасит» вычетами.</div>
+    <div><b class="k">2</b><b>Проводим черту — порог.</b><br>Например, «доход не меньше 95 % лимита».</div>
+    <div><b class="k">3</b><b>Всех, кто за чертой, — на проверку.</b><br>Компьютер делает это за секунды для тысяч фирм.</div>
+  </div>
+  <div class="chips" id="r-pick"></div>
+  <div class="say neutral" id="r-what"></div>
+  <div class="slider"><span>Порог:</span><input id="r-thr" type="range" min="50" max="100" step="1"><output id="r-out"></output>
+    <button class="btn" id="r-fns">Порог из критериев ФНС</button></div>
+  <svg id="r-svg" viewBox="0 0 900 380" role="img" aria-label="Фирмы и порог"></svg>
+  <div class="legend"><span><i style="background:var(--blue)"></i>честные фирмы (сверху)</span><span><i style="background:var(--orange)"></i>нарушители (снизу)</span><span>яркие точки — попали на проверку, бледные — нет</span><span class="small" id="r-unit"></span></div>
+  <div class="cards" id="r-cards"></div>
+  <div class="say" id="r-say"></div>
+  <div class="row">
+    <div class="col-main"><h2>Чем ниже порог, тем больше находим и тем больше честных задеваем</h2>
+      <svg id="r-svg2" viewBox="0 0 900 260" role="img" aria-label="Что даёт каждый порог"></svg>
+      <div class="legend"><span><i style="background:var(--orange)"></i>сколько нарушителей нашли</span><span><i style="background:var(--blue)"></i>сколько честных задели зря</span><span>красная черта — выбранный порог</span></div>
+    </div>
+    <div class="col-side"><div class="panel"><h3>Плюсы и минусы правил</h3>
+      <p style="margin:4px 0"><b class="ok">Плюсы:</b> просто, быстро, каждое решение легко объяснить («у фирмы доход 97 % лимита»).</p>
+      <p style="margin:4px 0"><b class="warn">Минусы:</b> черта всегда кого-то пропускает и кого-то задевает зря. Хитрый нарушитель может держаться чуть ниже черты. А честная фирма может случайно оказаться за ней.</p></div></div>
+  </div>
+</section>
+
+<!-- ================= 4. РАСХОЖДЕНИЯ ================= -->
+<section id="s-gaps">
+  <h2 style="margin-top:0">Что такое расхождение</h2>
+  <p style="margin:4px 0 8px">Каждая сделка оставляет две записи: у покупателя в <b>книге покупок</b> (раздел 8 декларации по НДС) и у продавца в <b>книге продаж</b> (раздел 9). Налоговая сравнивает их, как две половинки. Всё совпало — пара найдена. Не совпало хоть что-то — <b>расхождение</b>.</p>
+  <div id="x-books"></div>
+
+  <h2>Почему записи не совпадают</h2>
+  <div class="chips" id="x-metric"></div>
+  <div class="row">
+    <div class="col-main"><svg id="x-svg" viewBox="0 0 900 600" role="img" aria-label="Причины расхождений"></svg></div>
+    <div class="col-side">
+      <div class="panel"><h3>Как читать этот график</h3>
+        <ol class="howto">
+          <li>Каждая строка — <b>одна причина</b>, почему записи не совпали.</li>
+          <li><b>Длина полоски</b> — сколько таких расхождений (или сколько налога в них, если переключить кнопку сверху).</li>
+          <li><b>Цвет:</b> <span style="color:var(--blue);font-weight:700">синий</span> — обычная ошибка, <span style="color:var(--orange);font-weight:700">оранжевый</span> — схема.</li>
+          <li>Число справа — точное значение. <b>Нажмите на строку</b>, и вверху страницы появится пример: какие записи сдали покупатель и продавец.</li>
+        </ol>
+      </div>
+      <div class="say neutral" id="x-sum"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+const D = {"chains": [{"id": "VC003", "title": "Простая схема", "unpaid_mln": 12.65, "nodes": [{"id": "0836", "form": "ООО", "life_q": 10, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 0, "customers": 0, "suppliers": 0, "not_filed": 0, "zero": 0, "rereg": 2, "income_mln": 0.0, "role_code": "shell", "role": "однодневка", "layer": 0}, {"id": "1633", "form": "ООО", "life_q": 11, "closed": false, "addr": "массовой регистрации", "addr_n": 88, "hc": 1, "customers": 2, "suppliers": 2, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 39.8, "role_code": "transit", "role": "посредник", "layer": 1}, {"id": "2015", "form": "ООО", "life_q": 12, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 10, "customers": 0, "suppliers": 7, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 101.7, "role_code": "beneficiary", "role": "получатель вычета", "layer": 2}, {"id": "3594", "form": "ООО", "life_q": 12, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 3161, "customers": 412, "suppliers": 5, "not_filed": 0, "zero": 0, "rereg": 1, "income_mln": 13122.1, "role_code": "beneficiary", "role": "получатель вычета", "layer": 2}, {"id": "3751", "form": "ООО", "life_q": 7, "closed": true, "addr": "обычный", "addr_n": 1, "hc": 2, "customers": 0, "suppliers": 0, "not_filed": 7, "zero": 0, "rereg": 1, "income_mln": null, "role_code": "shell", "role": "однодневка", "layer": 0}], "edges": [{"from": "0836", "to": "1633", "amount_mln": 35.4, "vat_mln": 7.8, "vat_rep_mln": 0.0, "n": 6, "q0": 3, "q1": 8, "gap": true, "reason": "Однодневка не записала продажу"}, {"from": "3751", "to": "1633", "amount_mln": 22.1, "vat_mln": 4.85, "vat_rep_mln": 0.0, "n": 6, "q0": 3, "q1": 8, "gap": true, "reason": "Однодневка не сдала декларацию"}, {"from": "1633", "to": "2015", "amount_mln": 30.9, "vat_mln": 6.79, "vat_rep_mln": 6.79, "n": 6, "q0": 3, "q1": 8, "gap": false, "reason": ""}, {"from": "1633", "to": "3594", "amount_mln": 27.0, "vat_mln": 5.95, "vat_rep_mln": 5.95, "n": 6, "q0": 3, "q1": 8, "gap": false, "reason": ""}], "tax": [{"id": "0836", "accrued": 7.8, "deducted": 0.0, "reported": 0.0}, {"id": "1633", "accrued": 12.74, "deducted": 12.65, "reported": 12.74}, {"id": "2015", "accrued": 0.0, "deducted": 6.79, "reported": 0.0}, {"id": "3594", "accrued": 0.0, "deducted": 5.95, "reported": 0.0}, {"id": "3751", "accrued": 4.85, "deducted": 0.0, "reported": 0.0}]}, {"id": "VC013", "title": "Три однодневки", "unpaid_mln": 2.63, "nodes": [{"id": "0610", "form": "ООО", "life_q": 12, "closed": false, "addr": "жилой", "addr_n": 1, "hc": 8, "customers": 0, "suppliers": 4, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 43.5, "role_code": "beneficiary", "role": "получатель вычета", "layer": 3}, {"id": "1472", "form": "ООО", "life_q": 5, "closed": true, "addr": "обычный", "addr_n": 1, "hc": 0, "customers": 0, "suppliers": 0, "not_filed": 5, "zero": 0, "rereg": 0, "income_mln": null, "role_code": "shell", "role": "однодневка", "layer": 0}, {"id": "1575", "form": "ООО", "life_q": 6, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 2, "customers": 1, "suppliers": 3, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 11.6, "role_code": "transit", "role": "посредник", "layer": 1}, {"id": "2585", "form": "ООО", "life_q": 7, "closed": false, "addr": "массовой регистрации", "addr_n": 48, "hc": 1, "customers": 1, "suppliers": 1, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 11.8, "role_code": "transit", "role": "посредник", "layer": 2}, {"id": "2994", "form": "ООО", "life_q": 5, "closed": true, "addr": "обычный", "addr_n": 1, "hc": 0, "customers": 1, "suppliers": 0, "not_filed": 0, "zero": 0, "rereg": 1, "income_mln": 1.8, "role_code": "shell", "role": "однодневка", "layer": 0}, {"id": "3271", "form": "ООО", "life_q": 5, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 2, "customers": 0, "suppliers": 0, "not_filed": 5, "zero": 0, "rereg": 0, "income_mln": null, "role_code": "shell", "role": "однодневка", "layer": 0}], "edges": [{"from": "1472", "to": "1575", "amount_mln": 9.9, "vat_mln": 2.18, "vat_rep_mln": 0.0, "n": 5, "q0": 8, "q1": 12, "gap": true, "reason": "Однодневка не сдала декларацию"}, {"from": "2994", "to": "1575", "amount_mln": 2.8, "vat_mln": 0.63, "vat_rep_mln": 0.48, "n": 5, "q0": 8, "q1": 12, "gap": true, "reason": "Однодневка занизила сумму"}, {"from": "3271", "to": "1575", "amount_mln": 1.3, "vat_mln": 0.29, "vat_rep_mln": 0.0, "n": 5, "q0": 8, "q1": 12, "gap": true, "reason": "Однодневка не сдала декларацию"}, {"from": "1575", "to": "2585", "amount_mln": 14.3, "vat_mln": 3.15, "vat_rep_mln": 3.15, "n": 5, "q0": 8, "q1": 12, "gap": false, "reason": ""}, {"from": "2585", "to": "0610", "amount_mln": 14.5, "vat_mln": 3.18, "vat_rep_mln": 3.18, "n": 5, "q0": 8, "q1": 12, "gap": false, "reason": ""}], "tax": [{"id": "0610", "accrued": 0.0, "deducted": 3.18, "reported": 0.0}, {"id": "1472", "accrued": 2.18, "deducted": 0.0, "reported": 0.0}, {"id": "1575", "accrued": 3.15, "deducted": 3.1, "reported": 3.15}, {"id": "2585", "accrued": 3.18, "deducted": 3.15, "reported": 3.18}, {"id": "2994", "accrued": 0.63, "deducted": 0.0, "reported": 0.48}, {"id": "3271", "accrued": 0.29, "deducted": 0.0, "reported": 0.0}]}, {"id": "VC021", "title": "Длинная цепочка посредников", "unpaid_mln": 17.06, "nodes": [{"id": "0969", "form": "ООО", "life_q": 12, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 56, "customers": 74, "suppliers": 5, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 1559.2, "role_code": "beneficiary", "role": "получатель вычета", "layer": 5}, {"id": "0994", "form": "ООО", "life_q": 5, "closed": true, "addr": "массовой регистрации", "addr_n": 88, "hc": 0, "customers": 0, "suppliers": 0, "not_filed": 0, "zero": 5, "rereg": 0, "income_mln": 0.0, "role_code": "shell", "role": "однодневка", "layer": 0}, {"id": "1348", "form": "ООО", "life_q": 8, "closed": true, "addr": "жилой", "addr_n": 1, "hc": 2, "customers": 1, "suppliers": 1, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 60.0, "role_code": "transit", "role": "посредник", "layer": 2}, {"id": "1421", "form": "ООО", "life_q": 10, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 2, "customers": 1, "suppliers": 1, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 58.4, "role_code": "transit", "role": "посредник", "layer": 1}, {"id": "1523", "form": "ООО", "life_q": 9, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 5, "customers": 1, "suppliers": 1, "not_filed": 0, "zero": 0, "rereg": 0, "income_mln": 29.9, "role_code": "transit", "role": "посредник", "layer": 4}, {"id": "2616", "form": "ООО", "life_q": 7, "closed": true, "addr": "обычный", "addr_n": 1, "hc": 4, "customers": 2, "suppliers": 1, "not_filed": 0, "zero": 0, "rereg": 1, "income_mln": 61.1, "role_code": "transit", "role": "посредник", "layer": 3}, {"id": "3783", "form": "ООО", "life_q": 9, "closed": false, "addr": "обычный", "addr_n": 1, "hc": 4, "customers": 1, "suppliers": 1, "not_filed": 0, "zero": 0, "rereg": 1, "income_mln": 31.6, "role_code": "transit", "role": "посредник", "layer": 4}], "edges": [{"from": "0994", "to": "1421", "amount_mln": 77.5, "vat_mln": 17.06, "vat_rep_mln": 0.0, "n": 5, "q0": 5, "q1": 9, "gap": true, "reason": "Однодневка сдала пустую декларацию"}, {"from": "1421", "to": "1348", "amount_mln": 79.8, "vat_mln": 17.55, "vat_rep_mln": 17.55, "n": 5, "q0": 5, "q1": 9, "gap": false, "reason": ""}, {"from": "1348", "to": "2616", "amount_mln": 81.9, "vat_mln": 18.03, "vat_rep_mln": 18.03, "n": 5, "q0": 5, "q1": 9, "gap": false, "reason": ""}, {"from": "2616", "to": "1523", "amount_mln": 40.5, "vat_mln": 8.92, "vat_rep_mln": 8.92, "n": 5, "q0": 5, "q1": 9, "gap": false, "reason": ""}, {"from": "2616", "to": "3783", "amount_mln": 42.9, "vat_mln": 9.44, "vat_rep_mln": 9.44, "n": 5, "q0": 5, "q1": 9, "gap": false, "reason": ""}, {"from": "1523", "to": "0969", "amount_mln": 40.8, "vat_mln": 8.97, "vat_rep_mln": 8.97, "n": 5, "q0": 5, "q1": 9, "gap": false, "reason": ""}, {"from": "3783", "to": "0969", "amount_mln": 43.1, "vat_mln": 9.49, "vat_rep_mln": 9.49, "n": 5, "q0": 5, "q1": 9, "gap": false, "reason": ""}], "tax": [{"id": "0969", "accrued": 0.0, "deducted": 18.45, "reported": 0.0}, {"id": "0994", "accrued": 17.06, "deducted": 0.0, "reported": 0.0}, {"id": "1348", "accrued": 18.03, "deducted": 17.55, "reported": 18.03}, {"id": "1421", "accrued": 17.55, "deducted": 17.06, "reported": 17.55}, {"id": "1523", "accrued": 8.97, "deducted": 8.92, "reported": 8.97}, {"id": "2616", "accrued": 18.36, "deducted": 18.03, "reported": 18.36}, {"id": "3783", "accrued": 9.49, "deducted": 9.44, "reported": 9.49}]}], "groups": [{"id": "FG034", "title": "Почти всё общее", "new": 0, "members": [{"id": "1135", "role": "фирма группы", "new": false, "ratio": [76.9, 96.5, 98.3], "income_mln": [377.3, 473.5, 482.1], "hc": 105, "addr": "жилой"}, {"id": "2060", "role": "фирма группы", "new": false, "ratio": [63.9, 82.5, 85.1], "income_mln": [313.6, 404.8, 417.3], "hc": 54, "addr": "жилой"}, {"id": "3640", "role": "новая фирма группы", "new": true, "ratio": [null, null, 43.2], "income_mln": [null, null, 211.8], "hc": 8, "addr": "жилой"}], "features": [{"name": "Один адрес", "yes": true, "text": "фирмы 1135, 2060, 3640 зарегистрированы по одному адресу"}, {"name": "Один владелец или директор", "yes": true, "text": "один и тот же человек — владелец или директор фирм 1135, 2060, 3640"}, {"name": "Одни и те же работники", "yes": true, "text": "2 чел. числятся сразу в нескольких фирмах группы"}, {"name": "Одни и те же покупатели", "yes": true, "text": "6 из 17 покупателей платят сразу нескольким фирмам группы"}, {"name": "Один банк", "yes": true, "text": "фирмы 1135, 2060, 3640 держат счёт в одном банке"}, {"name": "Одно и то же занятие", "yes": true, "text": "все занимаются одним видом деятельности (код 52)"}], "total_ratio": [141, 179, 227], "total_mln": [690.8, 878.4, 1111.2]}, {"id": "FG021", "title": "Пять фирм вместо одной", "new": 0, "members": [{"id": "3179", "role": "фирма группы", "new": false, "ratio": [92.3, 97.0, 99.2], "income_mln": [452.7, 476.0, 486.5], "hc": 24, "addr": "обычный"}, {"id": "3214", "role": "фирма группы", "new": false, "ratio": [79.9, 96.2, 97.8], "income_mln": [391.8, 471.9, 479.7], "hc": 123, "addr": "обычный"}, {"id": "3496", "role": "фирма группы", "new": false, "ratio": [83.0, 96.9, 97.6], "income_mln": [406.9, 475.5, 478.7], "hc": 123, "addr": "обычный"}, {"id": "3930", "role": "фирма группы", "new": false, "ratio": [90.5, 94.6, 97.4], "income_mln": [444.0, 464.1, 478.0], "hc": 75, "addr": "жилой"}, {"id": "4077", "role": "фирма группы", "new": false, "ratio": [80.0, 83.3, 85.8], "income_mln": [392.5, 408.5, 421.1], "hc": 123, "addr": "жилой"}], "features": [{"name": "Один адрес", "yes": false, "text": "у каждой фирмы свой адрес"}, {"name": "Один владелец или директор", "yes": true, "text": "один и тот же человек — владелец или директор фирм 3179, 3214, 3496, 3930, 4077"}, {"name": "Одни и те же работники", "yes": true, "text": "14 чел. числятся сразу в нескольких фирмах группы"}, {"name": "Одни и те же покупатели", "yes": true, "text": "6 из 39 покупателей платят сразу нескольким фирмам группы"}, {"name": "Один банк", "yes": false, "text": "банки разные"}, {"name": "Одно и то же занятие", "yes": true, "text": "все занимаются одним видом деятельности (код 72)"}], "total_ratio": [426, 468, 478], "total_mln": [2088.0, 2295.9, 2344.0]}, {"id": "FN001", "title": "Хитрая группа", "new": 1, "members": [{"id": "1012", "role": "фирма группы", "new": false, "ratio": [77.8, 96.1, 96.9], "income_mln": [381.8, 471.2, 475.4], "hc": 123, "addr": "офисный центр"}, {"id": "2404", "role": "фирма группы", "new": false, "ratio": [77.4, 93.9, 94.8], "income_mln": [379.7, 460.4, 465.2], "hc": 75, "addr": "обычный"}, {"id": "2534", "role": "фирма группы", "new": false, "ratio": [90.1, 93.1, 95.6], "income_mln": [442.0, 456.5, 468.9], "hc": 32, "addr": "жилой"}, {"id": "3257", "role": "фирма группы", "new": false, "ratio": [74.7, 95.6, 98.3], "income_mln": [366.4, 469.2, 482.3], "hc": 116, "addr": "офисный центр"}, {"id": "4654", "role": "фирма группы", "new": false, "ratio": [83.5, 96.4, 98.8], "income_mln": [409.8, 473.1, 484.7], "hc": 18, "addr": "обычный"}], "features": [{"name": "Один адрес", "yes": false, "text": "у каждой фирмы свой адрес"}, {"name": "Один владелец или директор", "yes": false, "text": "владельцы и директора — разные люди"}, {"name": "Одни и те же работники", "yes": false, "text": "работники разные"}, {"name": "Одни и те же покупатели", "yes": true, "text": "7 из 26 покупателей платят сразу нескольким фирмам группы"}, {"name": "Один банк", "yes": true, "text": "фирмы 1012, 2404, 2534, 3257, 4654 держат счёт в одном банке"}, {"name": "Одно и то же занятие", "yes": true, "text": "все занимаются одним видом деятельности (код 13)"}], "total_ratio": [404, 475, 485], "total_mln": [1979.8, 2330.3, 2376.5]}], "rules": {"income": {"lo": 50, "hi": 100, "step": 2, "unit": 5, "bad_n": 718, "good_n": 7354, "bad_hist": [4, 2, 1, 4, 6, 3, 8, 8, 5, 10, 11, 16, 32, 33, 19, 50, 37, 39, 40, 36, 33, 37, 81, 98, 60], "good_hist": [10, 7, 11, 7, 7, 9, 10, 6, 8, 7, 8, 9, 8, 5, 6, 6, 17, 12, 11, 35, 37, 22, 35, 60, 32], "thr": [50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "bad_flag": [673, 672, 669, 669, 667, 667, 666, 664, 662, 660, 656, 656, 653, 649, 645, 640, 637, 637, 632, 629, 622, 617, 611, 603, 595, 576, 563, 546, 530, 520, 511, 488, 461, 439, 424, 403, 385, 368, 345, 331, 309, 287, 276, 258, 239, 208, 158, 97, 60, 24, 0], "good_flag": [385, 380, 375, 369, 368, 365, 357, 354, 350, 344, 343, 338, 334, 331, 324, 320, 318, 316, 310, 308, 303, 300, 295, 290, 286, 283, 278, 275, 273, 270, 267, 265, 261, 251, 244, 242, 232, 226, 221, 195, 186, 166, 149, 140, 127, 109, 92, 63, 32, 11, 0]}, "deduction": {"lo": 0, "hi": 100, "step": 4, "unit": 5, "bad_n": 172, "good_n": 1779, "bad_hist": [11, 2, 6, 5, 4, 1, 6, 8, 13, 4, 3, 9, 2, 4, 3, 0, 5, 1, 2, 2, 1, 1, 0, 0, 79], "good_hist": [10, 25, 124, 111, 40, 71, 109, 117, 88, 131, 98, 77, 57, 63, 55, 81, 83, 73, 73, 103, 69, 64, 37, 12, 8], "thr": [50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "good_flag": [748, 732, 721, 708, 691, 677, 658, 643, 630, 622, 603, 577, 556, 536, 522, 502, 480, 457, 439, 419, 402, 384, 366, 341, 326, 309, 293, 272, 248, 221, 190, 169, 152, 136, 121, 103, 82, 68, 57, 46, 43, 34, 20, 16, 13, 8, 8, 6, 3, 0, 0], "bad_flag": [99, 98, 98, 98, 96, 95, 94, 94, 94, 92, 91, 91, 91, 91, 91, 90, 90, 88, 86, 86, 86, 86, 85, 85, 83, 83, 83, 82, 82, 82, 81, 81, 80, 80, 80, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 47, 21, 0], "roles": [{"name": "однодневка", "n": 59, "flag": [12, 11, 11, 11, 9, 8, 7, 7, 7, 5, 4, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "посредник", "n": 79, "flag": [79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 79, 47, 21, 0]}, {"name": "получатель вычета", "n": 34, "flag": [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}]}, "limit_mln": 490.5}, "gaps": {"ded_bln": 62.39, "n_records8": 113839, "rows": [{"kind": "scheme", "reason": "scheme_N1", "name": "Новая схема: много мелких продавцов скрывают часть продаж", "text": "Схема, которой нет в учебных примерах: разрыв «рассыпан» по многим мелким продавцам.", "n": 98, "pct": 0.033, "ex": {"seller": "2872", "buyer": "1752", "seller_inn": "4671886982", "buyer_inn": "5724294509", "b8": {"inn": "4671886982", "inn_ok": true, "no": "СФ-0140308", "amount": 617780, "vat": 111403, "kvo": "02"}, "s9": null}}, {"kind": "scheme", "reason": "scheme_a", "name": "Однодневка не сдала декларацию", "text": "Схема: подставная фирма «продала» на бумаге и вообще не отчиталась, а покупатель заявил вычет.", "n": 124, "pct": 0.349, "ex": {"seller": "0842", "buyer": "4401", "seller_inn": "9889269915", "buyer_inn": "6920080362", "b8": {"inn": "9889269915", "inn_ok": true, "no": "СФ-0129243", "amount": 6505084, "vat": 1173048, "kvo": "02"}, "s9": null}}, {"kind": "scheme", "reason": "scheme_b", "name": "Однодневка сдала пустую декларацию", "text": "Схема: подставная фирма сдала нулевой отчёт, будто ничего не продавала.", "n": 35, "pct": 0.083, "ex": {"seller": "0115", "buyer": "2278", "seller_inn": "1684943236", "buyer_inn": "3504213246", "b8": {"inn": "1684943236", "inn_ok": true, "no": "СФ-0078401", "amount": 6494080, "vat": 1171064, "kvo": "02"}, "s9": null}}, {"kind": "scheme", "reason": "scheme_c", "name": "Однодневка не записала продажу", "text": "Схема: отчёт сдан, но «продажи» в нём нет.", "n": 34, "pct": 0.094, "ex": {"seller": "1905", "buyer": "0038", "seller_inn": "7980798590", "buyer_inn": "7137816282", "b8": {"inn": "7980798590", "inn_ok": true, "no": "СФ-0146320", "amount": 5755784, "vat": 1037928, "kvo": "02"}, "s9": null}}, {"kind": "scheme", "reason": "scheme_d", "name": "Однодневка занизила сумму", "text": "Схема: продажа записана, но на гораздо меньшую сумму, чтобы платить меньше налога.", "n": 38, "pct": 0.095, "ex": {"seller": "0280", "buyer": "3896", "seller_inn": "5215633393", "buyer_inn": "7519130490", "b8": {"inn": "5215633393", "inn_ok": true, "no": "СФ-0154319", "amount": 7072222, "vat": 1275319, "kvo": "02"}, "s9": {"inn": "7519130490", "inn_ok": true, "no": "СФ-0154319", "amount": 7072222, "vat": 1275319, "kvo": "03"}}}, {"kind": "technical", "reason": "noise_amount_8", "name": "Покупатель ошибся в сумме", "text": "Обычная опечатка: у покупателя сумма не такая, как у продавца.", "n": 78, "pct": 0.006, "ex": {"seller": "2516", "buyer": "2590", "seller_inn": "3891823577", "buyer_inn": "8089001253", "b8": {"inn": "3891823577", "inn_ok": true, "no": "СФ-0100066", "amount": 33140, "vat": 5976, "kvo": "02"}, "s9": {"inn": "8089001253", "inn_ok": true, "no": "СФ-0100066", "amount": 40006, "vat": 7214, "kvo": "02"}}}, {"kind": "technical", "reason": "noise_amount_9", "name": "Продавец ошибся в сумме", "text": "Обычная опечатка: у продавца сумма не такая, как у покупателя.", "n": 79, "pct": 0.006, "ex": {"seller": "2686", "buyer": "0796", "seller_inn": "9801464503", "buyer_inn": "1162655057", "b8": {"inn": "9801464503", "inn_ok": true, "no": "СФ-0272969", "amount": 15193, "vat": 2740, "kvo": "02"}, "s9": {"inn": "1162655057", "inn_ok": true, "no": "СФ-0272969", "amount": 10055, "vat": 1813, "kvo": "02"}}}, {"kind": "technical", "reason": "noise_not_filed", "name": "Продавец не сдал декларацию", "text": "Обычная ошибка: продавец опоздал или забыл сдать отчёт. Записи покупателя не с чем сравнить.", "n": 169, "pct": 0.087, "ex": {"seller": "0576", "buyer": "1051", "seller_inn": "6084315376", "buyer_inn": "5679999492", "b8": {"inn": "6084315376", "inn_ok": true, "no": "СФ-0000618", "amount": 125396, "vat": 22612, "kvo": "02"}, "s9": null}}, {"kind": "technical", "reason": "noise_unreflected", "name": "Продавец забыл записать продажу", "text": "Обычная ошибка: отчёт сдан, но одной продажи в нём нет.", "n": 87, "pct": 0.122, "ex": {"seller": "1221", "buyer": "1091", "seller_inn": "6227126472", "buyer_inn": "1127193373", "b8": {"inn": "6227126472", "inn_ok": true, "no": "СФ-0310045", "amount": 103173, "vat": 18605, "kvo": "02"}, "s9": null}}, {"kind": "technical", "reason": "noise_wrong_inn_8", "name": "Покупатель ошибся в ИНН продавца", "text": "ИНН — номер фирмы в налоговой. Одна неверная цифра, и запись «ищет» не ту фирму.", "n": 43, "pct": 0.032, "ex": {"seller": "1136", "buyer": "3129", "seller_inn": "294432443009", "buyer_inn": "2607358045", "b8": {"inn": "6001131487", "inn_ok": false, "no": "СФ-0331431", "amount": 208754, "vat": 37644, "kvo": "02"}, "s9": {"inn": "2607358045", "inn_ok": true, "no": "СФ-0331431", "amount": 208754, "vat": 37644, "kvo": "02"}}}, {"kind": "technical", "reason": "noise_wrong_inn_9", "name": "Продавец ошибся в ИНН покупателя", "text": "ИНН — номер фирмы в налоговой. Одна неверная цифра, и запись «ищет» не ту фирму.", "n": 44, "pct": 0.04, "ex": {"seller": "3726", "buyer": "2569", "seller_inn": "6032976229", "buyer_inn": "9407360498", "b8": {"inn": "6032976229", "inn_ok": true, "no": "СФ-0073341", "amount": 201833, "vat": 36396, "kvo": "02"}, "s9": {"inn": "4326724730", "inn_ok": false, "no": "СФ-0073341", "amount": 201833, "vat": 36396, "kvo": "02"}}}, {"kind": "technical", "reason": "noise_wrong_kvo_8", "name": "Покупатель указал не тот код операции", "text": "Код операции — номер вида сделки. Записи с разными кодами не считаются парой.", "n": 40, "pct": 0.031, "ex": {"seller": "4241", "buyer": "4362", "seller_inn": "445300997045", "buyer_inn": "9410478548", "b8": {"inn": "445300997045", "inn_ok": true, "no": "СФ-0214493", "amount": 560578, "vat": 101088, "kvo": "06"}, "s9": {"inn": "9410478548", "inn_ok": true, "no": "СФ-0214493", "amount": 560578, "vat": 101088, "kvo": "02"}}}, {"kind": "technical", "reason": "noise_wrong_kvo_9", "name": "Продавец указал не тот код операции", "text": "Код операции — номер вида сделки. Записи с разными кодами не считаются парой.", "n": 35, "pct": 0.044, "ex": {"seller": "1764", "buyer": "2980", "seller_inn": "278582329645", "buyer_inn": "5283256671", "b8": {"inn": "278582329645", "inn_ok": true, "no": "СФ-0093358", "amount": 510813, "vat": 92114, "kvo": "02"}, "s9": {"inn": "5283256671", "inn_ok": true, "no": "СФ-0093358", "amount": 510813, "vat": 92114, "kvo": "06"}}}, {"kind": "technical", "reason": "noise_zero", "name": "Продавец сдал пустую декларацию", "text": "Обычная ошибка: отчёт сдан, но без строк о продажах.", "n": 108, "pct": 0.06, "ex": {"seller": "2221", "buyer": "2707", "seller_inn": "8237505849", "buyer_inn": "6501705209", "b8": {"inn": "8237505849", "inn_ok": true, "no": "СФ-0112297", "amount": 81047, "vat": 14615, "kvo": "02"}, "s9": null}}], "match": {"seller": "2115", "buyer": "2803", "seller_inn": "3143564625", "buyer_inn": "8881355512", "b8": {"inn": "3143564625", "inn_ok": true, "no": "СФ-0000318", "amount": 1110054, "vat": 200174, "kvo": "02"}, "s9": {"inn": "8881355512", "inn_ok": true, "no": "СФ-0000318", "amount": 1110054, "vat": 200174, "kvo": "02"}}}};
+const NS = "http://www.w3.org/2000/svg";
+const $ = id => document.getElementById(id);
+function S(tag, attrs, parent, text){ const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); if(text !== undefined) e.textContent = text; if(parent) parent.appendChild(e); return e; }
+function clear(n){ while(n.firstChild) n.removeChild(n.firstChild); }
+const fmt = (x, d) => (d === undefined ? String(x) : Number(x).toFixed(d)).replace(".", ",");
+const M = (x, d) => fmt(x, d === undefined ? 1 : d) + " млн руб.";
+const big = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+const rub = n => big(n) + " руб.";
+function pw(n, a, b, c){ const m = n % 100, k = n % 10; return (m > 10 && m < 20) ? c : (k === 1 ? a : (k >= 2 && k <= 4 ? b : c)); }
+function chips(box, items, cur, cb){ clear(box); items.forEach((t, i) => { const b = document.createElement("button"); b.textContent = t; b.setAttribute("aria-pressed", i === cur); b.onclick = () => cb(i); box.appendChild(b); }); }
+
+/* ---------------- вкладки ---------------- */
+const TABS = [["s-chain", "1. Кто кому продал"], ["s-frag", "2. Один бизнес под видом нескольких"], ["s-rules", "3. Простые правила"], ["s-gaps", "4. Откуда берутся расхождения"]];
+TABS.forEach(([id, name]) => { const b = document.createElement("button"); b.textContent = name; b.setAttribute("role", "tab"); b.dataset.id = id; b.onclick = () => show(id); $("tabs").appendChild(b); });
+function show(id){ document.querySelectorAll("section").forEach(s => s.classList.toggle("on", s.id === id)); $("tabs").querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.id === id)); try{ history.replaceState(null, "", "#" + id); }catch(e){} }
+
+/* =============== 1. КТО КОМУ ПРОДАЛ =============== */
+const RC = {shell: "#D55E00", transit: "#E69F00", beneficiary: "#CC79A7"};
+const RN = {shell: "однодневка", transit: "посредник", beneficiary: "получатель вычета"};
+const PLAIN = {sells: "только продаёт", both: "покупает и продаёт", buys: "только покупает"};
+const STAGES = ["Что видит налоговая", "Угадайте мошенника", "Разбор по шагам", "Ответ: кто мошенник"];
+let ci = 0, stage = 0, step = 0, sel = null, guesses = [];
+const node = (ch, id) => ch.nodes.find(n => n.id === id);
+function plain(ch, id){ const o = ch.edges.some(e => e.from === id), i = ch.edges.some(e => e.to === id); return o && i ? "both" : (o ? "sells" : "buys"); }
+function taxOf(ch, id){ return ch.tax.find(t => t.id === id); }
+function money(ch){
+  let ded = 0, P = 0, R = 0, U = 0;
+  ch.nodes.forEach(n => { const t = taxOf(ch, n.id);
+    if(n.role_code === "beneficiary") ded += t.deducted;
+    if(n.role_code === "transit") P += t.accrued - t.deducted;
+    if(n.role_code === "shell"){ R += t.reported; U += t.accrued - t.reported; } });
+  return {ded, P, R, U};
+}
+function setStage(s){ stage = s; step = 0; drawChain(); }
+function drawChain(){
+  const ch = D.chains[ci];
+  chips($("c-pick"), D.chains.map((c, i) => "Пример " + (i + 1) + ". " + c.title + " (" + c.nodes.length + " " + pw(c.nodes.length, "фирма", "фирмы", "фирм") + ")"), ci, i => { ci = i; stage = 0; step = 0; sel = null; guesses = []; drawChain(); });
+  const st = $("c-stages"); clear(st);
+  STAGES.forEach((t, i) => { const b = document.createElement("button"); b.innerHTML = "<span class='n'>" + (i + 1) + "</span>" + t; b.setAttribute("aria-pressed", i === stage); b.onclick = () => setStage(i); st.appendChild(b); });
+  const reveal = stage >= 2, cur = stage === 2 ? ch.edges[step] : null;
+
+  // --- граф
+  const svg = $("c-svg"); clear(svg);
+  const layers = {}; ch.nodes.forEach(n => (layers[n.layer] = layers[n.layer] || []).push(n));
+  const L = Math.max(...Object.keys(layers).map(Number)) + 1, maxc = Math.max(...Object.values(layers).map(a => a.length));
+  const W = 900, H = Math.max(330, 125 * maxc + 50); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  const pos = {};
+  Object.keys(layers).forEach(l => { const a = layers[l].sort((x, y) => x.id.localeCompare(y.id)); a.forEach((n, i) => { pos[n.id] = {x: L > 1 ? 80 + l * (W - 160) / (L - 1) : W / 2, y: H / 2 + (i - (a.length - 1) / 2) * 122 - 8}; }); });
+  const defs = S("defs", {}, svg);
+  [["a0", "#8c8c8c"], ["a1", "#C62828"], ["a2", "#1f2328"]].forEach(([id, col]) => { const m = S("marker", {id, viewBox: "0 0 10 10", refX: "9", refY: "5", markerWidth: "14", markerHeight: "14", markerUnits: "userSpaceOnUse", orient: "auto-start-reverse"}, defs); S("path", {d: "M0,0 L10,5 L0,10 z", fill: col}, m); });
+  const amax = Math.max(...ch.edges.map(e => e.amount_mln));
+  ch.edges.forEach(e => {
+    const a = pos[e.from], b = pos[e.to], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), r = 33;
+    const isCur = cur && cur.from === e.from && cur.to === e.to, faded = cur && !isCur;
+    const col = isCur ? "#1f2328" : (e.gap ? "#C62828" : "#8c8c8c");
+    const l = S("line", {x1: a.x + dx / d * r, y1: a.y + dy / d * r, x2: b.x - dx / d * (r + 6), y2: b.y - dy / d * (r + 6), stroke: col,
+      "stroke-width": (isCur ? 3 : 1.5) + 4 * e.amount_mln / amax, "marker-end": "url(#" + (isCur ? "a2" : (e.gap ? "a1" : "a0")) + ")", opacity: faded ? .18 : 1}, svg);
+    if(e.gap) l.setAttribute("stroke-dasharray", "10 7");
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2 - 8;
+    S("text", {x: mx, y: my, "text-anchor": "middle", "font-size": 13.5, "font-weight": isCur ? 700 : 400, style: "paint-order:stroke;stroke:#fff;stroke-width:5px", opacity: faded ? .25 : 1}, svg, fmt(e.amount_mln, 1) + " млн");
+  });
+  ch.nodes.forEach(n => {
+    const p = pos[n.id], g = S("g", {style: "cursor:pointer"}, svg);
+    const inCur = cur && (cur.from === n.id || cur.to === n.id), faded = cur && !inCur;
+    const gs = guesses.find(x => x === n.id) !== undefined;
+    const fill = reveal ? RC[n.role_code] : "#e9ecef";
+    S("circle", {cx: p.x, cy: p.y, r: 31, fill, stroke: sel === n.id ? "#1f2328" : (gs ? (n.role_code === "beneficiary" ? "#00875A" : "#C62828") : (reveal ? "#fff" : "#9aa1a9")), "stroke-width": (sel === n.id || gs) ? 5 : 2, opacity: faded ? .3 : 1}, g);
+    S("text", {x: p.x, y: p.y + 5, "text-anchor": "middle", "font-size": 15, "font-weight": 700, style: reveal ? "fill:#fff" : "", opacity: faded ? .4 : 1}, g, n.id);
+    S("text", {x: p.x, y: p.y + 51, "text-anchor": "middle", "font-size": 13.5, opacity: faded ? .35 : 1}, g, PLAIN[plain(ch, n.id)]);
+    if(reveal) S("text", {x: p.x, y: p.y + 68, "text-anchor": "middle", "font-size": 14, "font-weight": 700, style: "fill:" + RC[n.role_code], opacity: faded ? .35 : 1}, g, RN[n.role_code]);
+    if(gs && !reveal) S("text", {x: p.x + 24, y: p.y - 22, "font-size": 22, "font-weight": 700, style: "fill:" + (n.role_code === "beneficiary" ? "#00875A" : "#C62828")}, g, n.role_code === "beneficiary" ? "✓" : "✗");
+    g.onclick = () => { sel = n.id; if(stage === 1 && !guesses.includes(n.id)) guesses.push(n.id); drawChain(); };
+  });
+  $("c-legend").innerHTML = "<span><b class='solid'></b>стрелка: от продавца к покупателю, подпись — сумма</span><span><b class='dash'></b>разрыв: у покупателя запись есть, у продавца нет</span>" +
+    (reveal ? Object.keys(RN).map(k => "<span><i style='background:" + RC[k] + "'></i>" + RN[k] + "</span>").join("") : "<span>кружок — фирма, внутри её номер</span>");
+
+  // --- боковая панель
+  const side = $("c-side"), m = money(ch), bens = ch.nodes.filter(n => n.role_code === "beneficiary");
+  let h = "";
+  if(stage === 0){
+    h = "<h3>Что видит налоговая</h3><p style='margin:4px 0'>Только отчёты фирм. Кто из них мошенник, в отчётах <b>не написано</b>.</p>" +
+      "<p style='margin:4px 0'>Стрелка идёт <b>от продавца к покупателю</b>. Подпись под кружком — что фирма делает в этой цепочке: только продаёт, только покупает или и то и другое.</p>" +
+      "<p style='margin:4px 0'><b class='warn'>Красный пунктир</b> — разрыв: покупатель записал «купил» и уменьшил налог, а продавец «продал» не записал.</p>" +
+      "<p style='margin:8px 0 4px'>Нажмите на кружок, чтобы увидеть данные о фирме. Потом переходите к шагу 2.</p>";
+  } else if(stage === 1){
+    const last = guesses.length ? node(ch, guesses[guesses.length - 1]) : null;
+    h = "<h3>Угадайте мошенника</h3><p style='margin:4px 0'>Нажмите на фирму, которой, по-вашему, <b>схема приносит деньги</b>.</p><p class='small' style='margin:4px 0'>Подсказка: смотрите, где разрывы и кто стоит в конце цепочки.</p>";
+    if(last){
+      const t = taxOf(ch, last.id);
+      if(last.role_code === "beneficiary") h += "<div class='say good'><b class='ok'>Верно!</b> Фирма " + last.id + " — <b>получатель вычета</b>. Она «купила» товар, которого не было, и уменьшила свой налог на <b>" + M(t.deducted, 2) + "</b>. Ради неё схема и строилась.</div>";
+      else if(last.role_code === "shell") h += "<div class='say bad'><b class='warn'>Не совсем.</b> Фирма " + last.id + " — <b>однодневка</b>, подставная фирма. Она участвует в схеме: её «продажа» не видна в отчётах, отсюда разрыв. Но денег она не получает: её создали, чтобы исчезнуть. Ищите, кому достаётся вычет.</div>";
+      else h += "<div class='say bad'><b class='warn'>Не совсем.</b> Фирма " + last.id + " — <b>посредник</b>. Она передаёт бумаги дальше и платит в бюджет копейки (" + M(t.accrued - t.deducted, 2) + "). Посредник тоже участник, но схема затевается не ради него.</div>";
+      if(last.role_code === "beneficiary") h += "<button class='btn main' onclick='setStage(2)'>Дальше: разбор по шагам →</button>";
+    }
+  } else if(stage === 2){
+    const e = cur, s = node(ch, e.from), b = node(ch, e.to), ts = taxOf(ch, s.id);
+    h = "<h3>Шаг " + (step + 1) + " из " + ch.edges.length + "</h3>" +
+      "<p style='margin:4px 0'>Фирма <b>" + s.id + "</b> (<span style='color:" + RC[s.role_code] + ";font-weight:700'>" + RN[s.role_code] + "</span>) «продаёт» фирме <b>" + b.id + "</b> (<span style='color:" + RC[b.role_code] + ";font-weight:700'>" + RN[b.role_code] + "</span>) на <b>" + M(e.amount_mln) + "</b>. НДС в цене — <b>" + M(e.vat_mln, 2) + "</b>. Товара на самом деле нет, есть только документы.</p>" +
+      "<p style='margin:4px 0'><b>Покупатель " + b.id + "</b> записал покупку в свой отчёт и уменьшил свой налог на " + M(e.vat_mln, 2) + ".</p>";
+    if(e.gap) h += "<div class='say bad' style='margin:6px 0'><b>Продавец " + s.id + "</b>: " + e.reason.toLowerCase() + (e.vat_rep_mln > 0 ? " (показал налог " + M(e.vat_rep_mln, 2) + " вместо " + M(e.vat_mln, 2) + ")" : "") + ". <b class='warn'>Налоговая видит разрыв</b>: вычет у покупателя есть, а налога у продавца нет.</div>";
+    else h += "<div class='say good' style='margin:6px 0'><b>Продавец " + s.id + "</b> честно записал продажу и начислил налог " + M(e.vat_mln, 2) + ". <b class='ok'>Записи сходятся</b>, налоговая ничего странного не видит. Но " + s.id + " сам вычел НДС по своей «покупке», поэтому платит только разницу: " + M(ts.accrued - ts.deducted, 2) + " за все свои продажи в схеме.</div>";
+    if(b.role_code === "beneficiary") h += "<p style='margin:4px 0'>Для <b>" + b.id + "</b> это конец цепочки: он вычел НДС по товару, которого не было.</p>";
+    h += "<div style='display:flex;gap:8px;margin-top:8px'><button class='btn' id='c-prev' " + (step === 0 ? "disabled" : "") + ">← Назад</button>" +
+      (step < ch.edges.length - 1 ? "<button class='btn main' id='c-next'>Дальше →</button>" : "<button class='btn main' onclick='setStage(3)'>Итог: кто мошенник →</button>") + "</div>";
+  } else {
+    h = "<h3>Кто мошенник</h3><p style='margin:4px 0'>Нарушают <b>все закрашенные фирмы вместе</b>: это одна схема. Но строят её ради <b style='color:" + RC.beneficiary + "'>получателя вычета</b> (" + bens.map(n => "фирма " + n.id).join(", ") + "). Он уменьшил свой налог на <b>" + M(m.ded, 2) + "</b> по товару, которого не было.</p>" +
+      "<p style='margin:4px 0'><b style='color:" + RC.shell + "'>Однодневки</b> — подставные фирмы: «продают» на бумаге и исчезают, не заплатив налог.</p>" +
+      "<p style='margin:4px 0'><b style='color:" + RC.transit + "'>Посредники</b> стоят посередине, чтобы запутать след: у них записи сходятся, и платят они копейки.</p>" +
+      "<p class='small' style='margin:8px 0 0'>В жизни вину доказывают проверка и суд. Здесь роли известны заранее, потому что схему заложила программа.</p>";
+  }
+  if(sel && stage !== 2){
+    const n = node(ch, sel);
+    const rows = [["Покупает у", ch.edges.filter(e => e.to === n.id).map(e => e.from).join(", ") || "ни у кого в этой цепочке"], ["Продаёт фирмам", ch.edges.filter(e => e.from === n.id).map(e => e.to).join(", ") || "никому в этой цепочке"],
+      ["Существует", n.life_q + " из 12 кварталов" + (n.closed ? " (закрылась)" : "")], ["Работников", n.hc], ["Адрес", n.addr + (n.addr_n > 1 ? " (на нём " + n.addr_n + " " + pw(n.addr_n, "фирма", "фирмы", "фирм") + ")" : "")],
+      ["Покупателей в её отчётах", n.customers], ["Поставщиков в её отчётах", n.suppliers], ["Не сдала деклараций", n.not_filed], ["Сдала пустых деклараций", n.zero]];
+    h += "<h3 style='margin-top:14px'>Фирма " + n.id + (stage >= 2 ? " — <span style='color:" + RC[n.role_code] + "'>" + RN[n.role_code] + "</span>" : "") + "</h3><table>" + rows.map(r => "<tr><td>" + r[0] + "</td><td><b>" + r[1] + "</b></td></tr>").join("") + "</table>";
+  }
+  side.innerHTML = h.replace(/руб\.\./g, "руб.");
+  if($("c-prev")) $("c-prev").onclick = () => { step = Math.max(0, step - 1); drawChain(); };
+  if($("c-next")) $("c-next").onclick = () => { step = Math.min(ch.edges.length - 1, step + 1); drawChain(); };
+
+  // --- ответ: куда делся налог
+  const ans = $("c-answer");
+  if(stage === 3){
+    const tot = m.ded, seg = (v, col, label) => v > 0.004 ? "<span style='width:" + (v / tot * 100) + "%;background:" + col + "' title='" + label + "'>" + (v / tot > .12 ? M(v, 2) : "") + "</span>" : "";
+    let t = "<div class='panel' style='margin-top:14px'><h3>Куда делся налог</h3>" +
+      "<p style='margin:4px 0'>Получатель вычета уменьшил свой налог на <b>" + M(tot, 2) + "</b>. Чтобы государство ничего не потеряло, столько же должны были заплатить фирмы выше по цепочке. Вот что они заплатили на самом деле:</p>" +
+      "<div class='bar'>" + seg(m.U, "#D55E00", "не поступило") + seg(m.R, "#f2a77a", "однодневки показали в отчёте") + seg(m.P, "#E69F00", "заплатили посредники") + "</div>" +
+      "<div class='legend'><span><i style='background:#D55E00'></i><b>не поступило в бюджет: " + M(m.U, 2) + "</b> (однодневки не заплатили)</span>" + (m.R > 0.004 ? "<span><i style='background:#f2a77a'></i>однодневки показали в отчёте: " + M(m.R, 2) + "</span>" : "") +
+      "<span><i style='background:#E69F00'></i>заплатили посредники: " + M(m.P, 2) + "</span></div>" +
+      "<table style='margin-top:8px'><tr><th>Фирма</th><th>Роль</th><th class='n'>Начислила НДС (должна заплатить)</th><th class='n'>Вычла НДС</th><th class='n'>Итог для бюджета</th><th>Что это значит</th></tr>";
+    const order = {shell: 0, transit: 1, beneficiary: 2};
+    ch.nodes.slice().sort((a, b) => order[a.role_code] - order[b.role_code] || a.layer - b.layer).forEach(n => {
+      const x = taxOf(ch, n.id); let res, txt;
+      if(n.role_code === "shell"){ res = "<span class='warn'>заплатила " + fmt(x.reported, 2) + "</span>"; txt = x.reported > 0 ? "показала в отчёте только часть, остальное не заплатила" : "в отчёте этой продажи нет — налог не заплачен"; }
+      else if(n.role_code === "transit"){ res = "+" + fmt(x.accrued - x.deducted, 2); txt = "платит только разницу между «продажей» и «покупкой» — копейки"; }
+      else { res = "<span class='warn'>−" + fmt(x.deducted, 2) + "</span>"; txt = "на эту сумму заплатила меньше налога по своей настоящей торговле"; }
+      t += "<tr><td><b>" + n.id + "</b></td><td style='color:" + RC[n.role_code] + ";font-weight:700'>" + RN[n.role_code] + "</td><td class='n'>" + fmt(x.accrued, 2) + "</td><td class='n'>" + fmt(x.deducted, 2) + "</td><td class='n'>" + res + "</td><td>" + txt + "</td></tr>";
+    });
+    t += "</table><p class='small' style='margin:6px 0 0'>Суммы в млн руб., только по сделкам внутри этой схемы.</p></div>";
+    ans.innerHTML = t.replace(/руб\.\./g, "руб.");
+  } else ans.innerHTML = "";
+
+  // --- таблица сделок
+  const nm = id => { const n = node(ch, id); return "Фирма <b>" + id + "</b>" + (reveal ? " <span style='color:" + RC[n.role_code] + "'>(" + RN[n.role_code] + ")</span>" : ""); };
+  $("c-table").innerHTML = "<tr><th>Продавец</th><th></th><th>Покупатель</th><th class='n'>Сумма</th><th class='n'>НДС в цене</th><th>Записи сходятся?</th></tr>" +
+    ch.edges.map((e, i) => "<tr" + (stage === 2 && i === step ? " style='background:#eef5fb'" : "") + "><td>" + nm(e.from) + "</td><td>→</td><td>" + nm(e.to) + "</td><td class='n'>" + M(e.amount_mln) + "</td><td class='n'>" + M(e.vat_mln, 2) + "</td><td>" +
+      (e.gap ? "<span class='warn'>Нет, разрыв</span>" + (reveal ? "<br><span class='small'>" + e.reason + "</span>" : "") : "<span class='ok'>Да</span>") + "</td></tr>").join("");
+}
+
+/* =============== 2. ОДИН БИЗНЕС =============== */
+const GC = ["#0072B2", "#009E73", "#E69F00", "#CC79A7", "#56B4E9", "#D55E00"];
+let gi = 0, gAns = null;
+function drawGroup(){
+  const g = D.groups[gi];
+  $("g-limit").textContent = fmt(D.rules.limit_mln, 1) + " млн руб. в год";
+  chips($("g-pick"), D.groups.map((x, i) => "Пример " + (i + 1) + ". " + x.title + " (" + x.members.length + " " + pw(x.members.length, "фирма", "фирмы", "фирм") + ")"), gi, i => { gi = i; gAns = null; drawGroup(); });
+  // график 1: столбики по годам
+  const svg = $("g-svg1"); clear(svg);
+  const W = 900, H = 340, ml = 96, mr = 16, mt = 20, mb = 46, ymax = 110;
+  const y = v => mt + (H - mt - mb) * (1 - v / ymax), n = g.members.length, gw = (W - ml - mr) / 3, bw = Math.min(46, (gw - 40) / n);
+  [0, 25, 50, 75].forEach(v => { S("line", {x1: ml, x2: W - mr, y1: y(v), y2: y(v), stroke: "#eceef0"}, svg); S("text", {x: ml - 8, y: y(v) + 5, "text-anchor": "end", "font-size": 13}, svg, v + " %"); });
+  for(let k = 0; k < 3; k++){
+    const x0 = ml + k * gw + (gw - bw * n) / 2;
+    S("text", {x: ml + k * gw + gw / 2, y: H - 16, "text-anchor": "middle", "font-size": 15, "font-weight": 600}, svg, "Год " + (k + 1));
+    g.members.forEach((m, j) => { const v = m.ratio[k]; if(v === null) { S("text", {x: x0 + j * bw + bw / 2, y: y(0) - 6, "text-anchor": "middle", "font-size": 12, style: "fill:#999"}, svg, "—"); return; }
+      const r = S("rect", {x: x0 + j * bw + 2, y: y(Math.min(v, ymax)), width: bw - 4, height: y(0) - y(Math.min(v, ymax)), fill: GC[j % GC.length], rx: 3}, svg);
+      S("title", {}, r, "Фирма " + m.id + ", год " + (k + 1) + ": " + fmt(m.income_mln[k]) + " млн руб. (" + fmt(v) + " % лимита)");
+      if(bw > 26) S("text", {x: x0 + j * bw + bw / 2, y: y(Math.min(v, ymax)) - 5, "text-anchor": "middle", "font-size": 12}, svg, Math.round(v));
+    });
+  }
+  S("line", {x1: ml, x2: W - mr, y1: y(100), y2: y(100), stroke: "#C62828", "stroke-width": 3, "stroke-dasharray": "8 5"}, svg);
+  S("text", {x: ml - 8, y: y(100) + 5, "text-anchor": "end", "font-size": 14, "font-weight": 700, style: "fill:#C62828"}, svg, "лимит 100 %");
+  $("g-legend").innerHTML = g.members.map((m, j) => "<span><i style='background:" + GC[j % GC.length] + "'></i>фирма " + m.id + (m.new ? " (появилась позже)" : "") + "</span>").join("") + "<span class='small'>число над столбиком — % лимита</span>";
+  // график 2: сумма
+  const s2 = $("g-svg2"); clear(s2);
+  const W2 = 900, ml2 = 70, mr2 = 150, rowH = 52, top = 18, xmax = Math.max(...g.total_ratio) * 1.05;
+  const x = v => ml2 + (W2 - ml2 - mr2) * v / xmax;
+  for(let k = 0; k < 3; k++){
+    const yy = top + k * (rowH + 14); let acc = 0;
+    S("text", {x: ml2 - 8, y: yy + rowH / 2 + 5, "text-anchor": "end", "font-size": 15, "font-weight": 600}, s2, "Год " + (k + 1));
+    g.members.forEach((m, j) => { const v = m.ratio[k] || 0; if(!v) return;
+      const r = S("rect", {x: x(acc), y: yy, width: x(acc + v) - x(acc), height: rowH, fill: GC[j % GC.length], stroke: "#fff", "stroke-width": 2}, s2);
+      S("title", {}, r, "Фирма " + m.id + ": " + fmt(v) + " % лимита"); acc += v; });
+    S("text", {x: x(acc) + 8, y: yy + rowH / 2 + 6, "font-size": 16, "font-weight": 700}, s2, "вместе " + g.total_ratio[k] + " %");
+  }
+  S("line", {x1: x(100), x2: x(100), y1: 6, y2: top + 3 * (rowH + 14) - 6, stroke: "#C62828", "stroke-width": 3, "stroke-dasharray": "8 5"}, s2);
+  S("text", {x: x(100) + 4, y: 14, "font-size": 13, "font-weight": 700, style: "fill:#C62828"}, s2, "лимит");
+  // признаки
+  const yes = g.features.filter(f => f.yes).length;
+  $("g-feat").innerHTML = "<p style='margin:0 0 6px'>Совпадает <b>" + yes + " из " + g.features.length + "</b> признаков.</p>" + g.features.map(f => "<div class='feat'><span class='pill " + (f.yes ? "y" : "n") + "'>" + (f.yes ? "Да" : "Нет") + "</span><div><b>" + f.name + "</b><br><span class='small' style='color:#333'>" + f.text + "</span></div></div>").join("");
+  // ответ
+  ["g-one", "g-many"].forEach(id => $(id).setAttribute("aria-pressed", gAns === id));
+  if(gAns){
+    const right = gAns === "g-one", newm = g.members.filter(m => m.new).map(m => m.id), last = g.total_ratio[2];
+    let t = "<div class='say " + (right ? "good" : "bad") + "' style='margin:10px 0 0'>" + (right ? "<b class='ok'>Верно.</b> " : "<b class='warn'>Нет.</b> ") + "Это <b>один бизнес</b>, разделённый на " + g.members.length + " " + pw(g.members.length, "фирму", "фирмы", "фирм") + ". ";
+    t += "Вместе они зарабатывают " + last + " % лимита — в " + fmt((last / 100).toFixed(1)) + " раза больше, чем можно на упрощённой системе. ";
+    if(newm.length) t += "Обратите внимание: когда доходы подошли к лимиту, появилась новая фирма (" + newm.join(", ") + "), и доход стали делить на большее число фирм. ";
+    if(yes <= 3) t += "Эта группа <b>спрятана</b>: общих людей и адреса нет. Выдают её доходы, прижатые к лимиту у всех фирм сразу, и общие покупатели. Такие группы находить труднее всего. ";
+    t += "</div><p class='small' style='margin:8px 0 0'>Бывают и честные группы фирм с общим адресом или владельцем. Поэтому смотрят на все признаки вместе, а окончательно решает проверка.</p>";
+    $("g-ans").innerHTML = t;
+  } else $("g-ans").innerHTML = "";
+}
+$("g-one").onclick = () => { gAns = "g-one"; drawGroup(); };
+$("g-many").onclick = () => { gAns = "g-many"; drawGroup(); };
+
+/* =============== 3. ПРАВИЛА =============== */
+const RULES = [
+  {key: "income", fns: 95, name: "Правило 1. Доход у лимита", unitWord: ["отчёт", "отчёта", "отчётов"],
+   what: "<b>Показатель:</b> доход фирмы за год в процентах от лимита упрощённой системы. <b>Кого ищем:</b> фирмы, на которые разделили один бизнес: их доходы прижаты к лимиту. <b>Порог ФНС:</b> «менее 5 % до лимита», то есть доход 95 % лимита и больше. Каждая точка — годовые отчёты фирм на упрощённой системе. Нарисованы только доходы от половины лимита: остальные правило всё равно не задевает, но в подсчёте внизу они учтены.",
+   axis: "доход за год, % от лимита"},
+  {key: "deduction", fns: 89, name: "Правило 2. Почти весь НДС уходит в вычет", unitWord: ["фирма", "фирмы", "фирм"],
+   what: "<b>Показатель:</b> какую часть начисленного НДС фирма «гасит» вычетами. 100 % — фирма почти ничего не платит в бюджет. <b>Кого ищем:</b> участников схем с НДС. <b>Порог ФНС:</b> вычеты 89 % и больше. Каждая точка — фирмы, которые платят НДС.",
+   axis: "вычеты, % от начисленного НДС"}];
+let ri = 0; const thr = {income: 95, deduction: 89};
+function drawRules(){
+  const R = RULES[ri], d = D.rules[R.key], t = thr[R.key], k = t - 50;
+  chips($("r-pick"), RULES.map(r => r.name), ri, i => { ri = i; drawRules(); });
+  $("r-what").innerHTML = R.what;
+  const inp = $("r-thr"); inp.value = t; $("r-out").textContent = t + " %";
+  $("r-unit").textContent = "1 точка ≈ " + d.unit + " " + pw(d.unit, ...R.unitWord);
+  // точечная диаграмма
+  const svg = $("r-svg"); clear(svg);
+  const W = 900, ml = 118, mr = 20, nb = d.good_hist.length, bw = (W - ml - mr) / nb, rr = Math.min(5.2, bw / 5), sp = 2 * rr + 2, cols = 2;
+  const dots = c => c > 0 ? Math.max(1, Math.round(c / d.unit)) : 0;
+  const topRows = Math.max(...d.good_hist.map(c => Math.ceil(dots(c) / cols))), botRows = Math.max(...d.bad_hist.map(c => Math.ceil(dots(c) / cols)));
+  const band = 44, y0 = band + topRows * sp + 18, H = y0 + botRows * sp + 18 + 58;
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  const X = v => ml + (v - d.lo) / (d.hi - d.lo) * (W - ml - mr);
+  S("rect", {x: X(t), y: band - 6, width: W - mr - X(t), height: H - 46 - band + 6, fill: "#fdecea"}, svg);
+  S("text", {x: 10, y: y0 - 14, "font-size": 15, "font-weight": 700, style: "fill:#0072B2"}, svg, "честные ↑");
+  S("text", {x: 10, y: y0 + 26, "font-size": 15, "font-weight": 700, style: "fill:#D55E00"}, svg, "нарушители ↓");
+  S("line", {x1: ml, x2: W - mr, y1: y0, y2: y0, stroke: "#9aa1a9"}, svg);
+  const drawSide = (hist, col, dir) => hist.forEach((c, b) => { const nd = dots(c), cx0 = ml + b * bw + bw / 2 - (cols - 1) * sp / 2, center = d.lo + (b + .5) * d.step, on = center >= t;
+    for(let i = 0; i < nd; i++){ const cx = cx0 + (i % cols) * sp, cy = y0 + dir * (10 + Math.floor(i / cols) * sp);
+      S("circle", {cx, cy, r: rr, fill: col, opacity: on ? 1 : .22}, svg); } });
+  drawSide(d.good_hist, "#0072B2", -1); drawSide(d.bad_hist, "#D55E00", 1);
+  for(let v = d.lo; v <= d.hi; v += 10){ S("line", {x1: X(v), x2: X(v), y1: H - 46, y2: H - 40, stroke: "#666"}, svg); S("text", {x: X(v), y: H - 24, "text-anchor": "middle", "font-size": 13}, svg, v + " %"); }
+  S("text", {x: (ml + W - mr) / 2, y: H - 6, "text-anchor": "middle", "font-size": 14, style: "fill:#5f6670"}, svg, R.axis);
+  // метка ФНС и порог
+  S("path", {d: "M" + X(R.fns) + "," + (H - 46) + " l-7,-12 l14,0 z", fill: "#1f2328"}, svg);
+  S("text", {x: X(R.fns) - 10, y: H - 52, "text-anchor": "end", "font-size": 12.5}, svg, "порог ФНС " + R.fns + " %");
+  S("line", {x1: X(t), x2: X(t), y1: 8, y2: H - 46, stroke: "#C62828", "stroke-width": 4}, svg);
+  const bx = Math.min(Math.max(X(t), ml + 30), W - mr - 30);
+  S("rect", {x: bx - 30, y: 6, width: 60, height: 30, rx: 6, fill: "#C62828"}, svg);
+  S("text", {x: bx, y: 27, "text-anchor": "middle", "font-size": 16, "font-weight": 700, style: "fill:#fff"}, svg, t + " %");
+  if(W - mr - X(t) > 190) S("text", {x: bx + 40, y: 27, "font-size": 15, "font-weight": 700, style: "fill:#C62828"}, svg, "за чертой — на проверку →");
+  else S("text", {x: bx - 40, y: 27, "text-anchor": "end", "font-size": 15, "font-weight": 700, style: "fill:#C62828"}, svg, "на проверку →");
+  // перетаскивание
+  const setFromEvent = ev => { const pt = svg.getBoundingClientRect(), vx = (ev.clientX - pt.left) / pt.width * W, v = Math.round(d.lo + (vx - ml) / (W - ml - mr) * (d.hi - d.lo)); thr[R.key] = Math.max(50, Math.min(100, v)); drawRules(); };
+  svg.onpointerdown = ev => { svg.setPointerCapture(ev.pointerId); setFromEvent(ev); svg.onpointermove = setFromEvent; };
+  svg.onpointerup = () => { svg.onpointermove = null; };
+  svg.style.cursor = "ew-resize";
+  // цифры
+  const F = d.bad_flag[k], Hn = d.good_flag[k], tot = F + Hn, P = tot ? Math.round(F / tot * 100) : 0;
+  const u = R.unitWord, wb = n => pw(n, ...u);
+  $("r-cards").innerHTML =
+    "<div class='card'><div class='big' style='color:#D55E00'>" + big(F) + " из " + big(d.bad_n) + "</div><div class='cap'>нарушителей <b>нашли</b> (" + Math.round(F / d.bad_n * 100) + " %)</div></div>" +
+    "<div class='card'><div class='big' style='color:#0072B2'>" + big(Hn) + " из " + big(d.good_n) + "</div><div class='cap'>честных <b>задели зря</b> (" + fmt((Hn / d.good_n * 100).toFixed(1)) + " %)</div></div>" +
+    "<div class='card'><div class='big'>" + P + " %</div><div class='cap'>из отправленных на проверку — настоящие нарушители</div></div>";
+  let s = "<p>При пороге <b>" + t + " %</b> правило отправит на проверку <b>" + big(tot) + "</b> " + wb(tot) + ": <b style='color:#D55E00'>" + big(F) + "</b> — нарушители, <b style='color:#0072B2'>" + big(Hn) + "</b> — честные. Пропущено нарушителей: <b>" + big(d.bad_n - F) + "</b>.</p>";
+  if(R.key === "deduction"){
+    s += "<p>Кого из нарушителей нашли: " + d.roles.map(r => r.name + " — <b>" + r.flag[k] + " из " + r.n + "</b>").join("; ") + ".</p>";
+    const ben = d.roles.find(r => r.name === "получатель вычета");
+    if(ben && ben.flag[k] < ben.n / 2) s += "<p><b>Важно:</b> правило ловит в основном посредников, а главного получателя выгоды почти не видит: у него вычеты не такие высокие, потому что у него есть и настоящая торговля. Честные оптовики с маленькой наценкой тоже попадают за черту.</p>";
+  } else {
+    s += "<p>Многие нарушители держат доход дальше от лимита (80–95 %), поэтому при пороге 95 % их не видно. Если опустить порог, найдём больше, но заденем больше честных фирм, у которых просто хороший год.</p>";
+  }
+  $("r-say").innerHTML = s;
+  // график компромисса
+  const s2 = $("r-svg2"); clear(s2);
+  const W2 = 900, H2 = 260, l2 = 60, r2 = 20, t2 = 16, b2 = 40, ymax = Math.max(...d.bad_flag, ...d.good_flag) * 1.08;
+  const xx = v => l2 + (v - 50) / 50 * (W2 - l2 - r2), yy = v => t2 + (H2 - t2 - b2) * (1 - v / ymax);
+  for(let v = 50; v <= 100; v += 10){ S("text", {x: xx(v), y: H2 - 14, "text-anchor": "middle", "font-size": 13}, s2, v + " %"); S("line", {x1: xx(v), x2: xx(v), y1: t2, y2: H2 - b2, stroke: "#f0f1f3"}, s2); }
+  const step = Math.pow(10, Math.floor(Math.log10(ymax))) / (ymax / Math.pow(10, Math.floor(Math.log10(ymax))) < 3 ? 2 : 1);
+  for(let v = 0; v <= ymax; v += step){ S("text", {x: l2 - 8, y: yy(v) + 5, "text-anchor": "end", "font-size": 13}, s2, big(Math.round(v))); S("line", {x1: l2, x2: W2 - r2, y1: yy(v), y2: yy(v), stroke: "#f0f1f3"}, s2); }
+  const line = (arr, col) => S("polyline", {points: arr.map((v, i) => xx(50 + i) + "," + yy(v)).join(" "), fill: "none", stroke: col, "stroke-width": 3.5}, s2);
+  line(d.bad_flag, "#D55E00"); line(d.good_flag, "#0072B2");
+  S("line", {x1: xx(t), x2: xx(t), y1: t2, y2: H2 - b2, stroke: "#C62828", "stroke-width": 3}, s2);
+  S("circle", {cx: xx(t), cy: yy(F), r: 7, fill: "#D55E00", stroke: "#fff", "stroke-width": 2}, s2);
+  S("circle", {cx: xx(t), cy: yy(Hn), r: 7, fill: "#0072B2", stroke: "#fff", "stroke-width": 2}, s2);
+  S("text", {x: (W2) / 2, y: H2 - 0, "text-anchor": "middle", "font-size": 13, style: "fill:#5f6670"}, s2, "порог");
+}
+$("r-thr").oninput = e => { thr[RULES[ri].key] = +e.target.value; drawRules(); };
+$("r-fns").onclick = () => { thr[RULES[ri].key] = RULES[ri].fns; drawRules(); };
+
+/* =============== 4. РАСХОЖДЕНИЯ =============== */
+let xm = 0, xsel = null;
+const _cv = document.createElement("canvas").getContext("2d");
+function textW(s, size, weight){ _cv.font = (weight || 400) + " " + size + "px " + getComputedStyle(document.body).fontFamily; return _cv.measureText(s).width; }
+function book(side, ex, other){
+  const r = side === "b8" ? ex.b8 : ex.s9, o = side === "b8" ? ex.s9 : ex.b8;
+  const who = side === "b8" ? "Покупатель — фирма " + ex.buyer : "Продавец — фирма " + ex.seller, sec = side === "b8" ? "раздел 8, «книга покупок»" : "раздел 9, «книга продаж»";
+  if(!r) return "<div class='book none'><div>" + who + "<br>(" + sec + ")<br><br>✗ ЗАПИСИ НЕТ</div></div>";
+  const cell = (v, bad, note) => "<td class='" + (bad ? "diff" : "") + "'>" + v + (bad && note ? "<br><span style='font-weight:400'>" + note + "</span>" : "") + "</td>";
+  const trueInn = side === "b8" ? ex.seller_inn : ex.buyer_inn;
+  return "<div class='book'><h4>" + who + "</h4><div class='small'>" + sec + "</div><table>" +
+    "<tr><td>" + (side === "b8" ? "У кого купил (ИНН)" : "Кому продал (ИНН)") + "</td>" + cell(r.inn, !r.inn_ok, "верный: " + trueInn) + "</tr>" +
+    "<tr><td>Номер счёта-фактуры</td>" + cell(r.no, o && o.no !== r.no) + "</tr>" +
+    "<tr><td>Сумма с НДС</td>" + cell(rub(r.amount), o && o.amount !== r.amount) + "</tr>" +
+    "<tr><td>В том числе НДС</td>" + cell(rub(r.vat), o && o.vat !== r.vat) + "</tr>" +
+    "<tr><td>Код операции</td>" + cell(r.kvo, o && o.kvo !== r.kvo) + "</tr></table></div>";
+}
+function drawBooks(){
+  const row = xsel === null ? null : D.gaps.rows[xsel], ex = row ? row.ex : D.gaps.match;
+  const ok = !row;
+  let h = "<div class='say " + (ok ? "good" : (row.kind === "scheme" ? "bad" : "neutral")) + "' style='margin-bottom:6px'>" +
+    (ok ? "<b class='ok'>Пример: записи совпали.</b> Номер, суммы, ИНН и код одинаковые — пара найдена, вопросов нет." :
+      "<b>" + row.name + "</b> " + (row.kind === "scheme" ? "<span class='warn'>(схема)</span>" : "<span style='color:var(--blue);font-weight:700'>(обычная ошибка)</span>") + ". " + row.text + " Красным выделено то, что не совпало.") +
+    (row ? " <button class='btn' id='x-reset' style='margin-left:8px;font-size:14px;padding:3px 10px'>показать совпавшую пару</button>" : "") + "</div>";
+  h += "<div class='books'>" + book("b8", ex) + "<div class='mid' style='color:" + (ok ? "var(--green)" : "var(--red)") + "'>" + (ok ? "=" : "≠") + "</div>" + book("s9", ex) + "</div>";
+  $("x-books").innerHTML = h;
+  if($("x-reset")) $("x-reset").onclick = () => { xsel = null; drawGaps(); };
+}
+function drawGaps(){
+  const G = D.gaps, key = xm === 0 ? "n" : "pct";
+  chips($("x-metric"), ["Сколько случаев", "Сколько налога (доля всех вычетов)"], xm, i => { xm = i; drawGaps(); });
+  const val = r => r[key], lab = r => xm === 0 ? big(r.n) : fmt(r.pct.toFixed(2)) + " %";
+  const tech = G.rows.map((r, i) => ({...r, i})).filter(r => r.kind === "technical").sort((a, b) => val(b) - val(a));
+  const sch = G.rows.map((r, i) => ({...r, i})).filter(r => r.kind === "scheme").sort((a, b) => val(b) - val(a));
+  const svg = $("x-svg"); clear(svg);
+  const W = 900, ml = 380, mr = 90, rh = 30, gh = 40, H = 20 + gh * 2 + rh * (tech.length + sch.length) + 10;
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  const vmax = Math.max(...G.rows.map(val)), X = v => (W - ml - mr) * v / vmax;
+  let yy = 14, first = true;
+  [["Обычные ошибки", tech, "#0072B2"], ["Схемы", sch, "#D55E00"]].forEach(([title, rows, col]) => {
+    const head = S("text", {x: 12, y: yy + 24, "font-size": 17, "font-weight": 700, style: "fill:" + col}, svg, title + " — всего " + (xm === 0 ? big(rows.reduce((s, r) => s + r.n, 0)) + " случаев" : fmt(rows.reduce((s, r) => s + r.pct, 0).toFixed(2)) + " % вычетов"));
+    yy += gh;
+    rows.forEach(r => {
+      const g = S("g", {style: "cursor:pointer"}, svg), on = xsel === r.i;
+      S("rect", {x: 4, y: yy - 2, width: W - 8, height: rh, fill: on ? "#eef5fb" : "transparent", rx: 4}, g);
+      const tl = S("text", {x: ml - 10, y: yy + rh / 2 + 3, "text-anchor": "end", "font-size": 14.5, "font-weight": on ? 700 : 400}, g, r.name.length > 46 ? r.name.slice(0, 44) + "…" : r.name);
+      S("rect", {x: ml, y: yy + 4, width: Math.max(2, X(val(r))), height: rh - 10, fill: col, rx: 3}, g);
+      const tv = S("text", {x: ml + X(val(r)) + 6, y: yy + rh / 2 + 3, "font-size": 14, "font-weight": 600}, g, lab(r));
+      if(first){ // номера «как читать»
+        const mk = (cx, cy, n) => { S("circle", {cx, cy, r: 12, fill: "#1f2328"}, svg); S("text", {x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 13, "font-weight": 700, style: "fill:#fff"}, svg, n); };
+        const w1 = textW(tl.textContent, 14.5, on ? 700 : 400), w4 = textW(tv.textContent, 14, 600), wh = textW(head.textContent, 17, 700);
+        mk(ml - 10 - w1 - 18, yy + rh / 2 - 1, "1"); mk(ml + Math.max(14, X(val(r)) / 2), yy + rh / 2 - 1, "2"); mk(12 + wh + 20, yy - gh + 18, "3"); mk(ml + X(val(r)) + 6 + w4 + 18, yy + rh / 2 - 1, "4");
+        first = false;
+      }
+      g.onclick = () => { xsel = r.i; drawGaps(); window.scrollTo({top: $("x-books").getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth"}); };
+      yy += rh;
+    });
+  });
+  const tn = tech.reduce((s, r) => s + r.n, 0), sn = sch.reduce((s, r) => s + r.n, 0), tp = tech.reduce((s, r) => s + r.pct, 0), sp = sch.reduce((s, r) => s + r.pct, 0);
+  $("x-sum").innerHTML = "<b>Что видно на графике.</b> По <b>числу случаев</b> обычных ошибок больше: " + big(tn) + " против " + big(sn) + ". А по <b>сумме налога</b> " + (sp > tp ? "больше схемы" : "больше ошибки") + ": " + fmt(sp.toFixed(2)) + " % всех вычетов против " + fmt(tp.toFixed(2)) + " %. Схемных сделок меньше, но они крупнее. <br><br>По одной паре записей ошибку от схемы не отличить: «продавец не сдал декларацию» бывает и так, и так. Поэтому нужно смотреть, <b>кто продавец</b> и как он ведёт себя в других сделках. Этим и занимаются правила и модели.";
+  drawBooks();
+}
+
+/* ---------------- запуск ---------------- */
+drawChain(); drawGroup(); drawRules(); drawGaps();
+show((location.hash || "").slice(1) && document.getElementById(location.hash.slice(1)) ? location.hash.slice(1) : "s-chain");
+</script>
+</body>
+</html>
