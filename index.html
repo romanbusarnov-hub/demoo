@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Поиск налоговых схем</title>
 <style>
 :root{--bg:#fff;--ink:#1f2328;--mut:#5f6670;--line:#dcdfe3;--panel:#f5f6f8;--blue:#0072B2;--orange:#D55E00;--amber:#E69F00;--purple:#CC79A7;--green:#00875A;--red:#C62828;--sky:#56B4E9;--teal:#009E73}
@@ -77,36 +77,78 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .small{font-size:14.5px;color:var(--mut)}
 .svgwrap{position:relative}
 .swipe{display:none}
-@media (max-width:700px){
-  body{font-size:16px}
-  header{padding:10px 12px 0}
-  h1{font-size:19px;line-height:1.25}
-  .sub{font-size:13px;margin-bottom:8px}
-  nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-  nav::-webkit-scrollbar{display:none}
-  nav button{flex:0 0 auto;white-space:nowrap;font-size:14.5px;padding:8px 12px}
-  main{padding:12px}
-  h2{font-size:18px}
-  .intro{gap:8px;margin-bottom:12px}
-  .intro .box{font-size:14.5px;padding:8px 11px}
-  .intro .box b.t{font-size:15px}
-  .panel,.say{font-size:15px}
+/* ---------- телефон и планшет (уже 900 px); компьютерная версия выше не меняется ---------- */
+@media (max-width:899px){
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  [hidden]{display:none!important}
+  body{font-size:16px;margin-bottom:0;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+  button,input,select,svg g,svg rect.tapzone{touch-action:manipulation}
+  header{padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 0 max(12px,env(safe-area-inset-left))}
+  h1{font-size:20px;line-height:1.25;margin:0 0 4px}
+  .sub{font-size:15px;line-height:1.4;margin-bottom:12px}
+  nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:12px}
+  nav button{min-height:52px;font-size:16px;line-height:1.25;padding:8px 10px;border:1px solid #b9bec5;border-radius:10px;text-align:left;white-space:normal}
+  nav button[aria-selected=true]{top:0;background:var(--ink);color:#fff;border-color:var(--ink)}
+  main{padding:14px max(12px,env(safe-area-inset-right)) 12px max(12px,env(safe-area-inset-left))}
+  h2{font-size:19px;line-height:1.3}
+  .intro{gap:8px;margin-bottom:14px}
+  .intro .box{font-size:16px;padding:10px 12px}
+  .intro .box b.t{font-size:17px}
+  .panel,.say{font-size:16px}
+  .panel{padding:12px 14px}
   .say{padding:10px 12px}
-  .chips button,.btn{font-size:14.5px;padding:6px 12px}
-  .stages button{flex:1 1 45%;font-size:14.5px;padding:8px}
-  .steps3 div,.card .cap{font-size:14.5px}
-  .big{font-size:24px}
-  .legend{font-size:13.5px;gap:10px}
+  .chips{gap:8px;margin:8px 0 12px}
+  .chips button,.btn{font-size:16px;min-height:44px;padding:8px 14px;line-height:1.3;text-align:left}
+  .chips button{border-radius:22px}
+  .stages{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:none;border-radius:0;overflow:visible;margin:4px 0 14px}
+  .stages button{display:flex;align-items:center;min-height:52px;font-size:16px;line-height:1.25;padding:8px 10px;border:1px solid #b9bec5;border-radius:10px}
+  .stages button:last-child{border-right:1px solid #b9bec5}
+  .stages button[aria-pressed=true]{border-color:var(--blue)}
+  .stages button .n{flex:0 0 26px}
+  .steps3 div,.card .cap{font-size:16px}
+  .big{font-size:26px}
+  .legend{font-size:15px;gap:6px 14px}
+  .small{font-size:15px}
   .col-main,.col-side{min-width:0;flex-basis:100%}
-  .svgwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px}
-  .svgwrap svg{width:760px;max-width:none}
-  .svgwrap.r svg{width:680px}
-  .svgwrap.fit svg{width:100%}
-  .swipe{display:block;font-size:12.5px;color:var(--mut);margin:2px 0 6px}
-  main table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:14px}
-  .book table{display:table}
+  #s-chain .col-side{order:-1}
+  .svgwrap svg{width:100%}
+  .bar{height:44px;font-size:15px}
   .books{grid-template-columns:1fr}.mid{transform:rotate(90deg)}
-  .slider output{font-size:20px}
+  .book{font-size:16px}.book h4{font-size:17px}.book table{font-size:15.5px}
+  .book td{overflow-wrap:anywhere}
+  .slider{gap:8px 12px}
+  .slider span{order:1}.slider output{order:2;font-size:22px}
+  .slider input{order:3;flex:1 1 100%;min-width:0;height:44px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+  .slider input::-webkit-slider-runnable-track{height:10px;border-radius:5px;background:#f1c9c9}
+  .slider input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:32px;height:32px;margin-top:-11px;border-radius:50%;background:var(--red);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .slider input::-moz-range-track{height:10px;border-radius:5px;background:#f1c9c9}
+  .slider input::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--red);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .slider input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .slider .btn{order:4}
+  #x-reset,#x-back{display:flex;margin:10px 0 0!important;font-size:16px!important;padding:8px 14px!important;min-height:44px}
+  /* таблицы превращаются в карточки */
+  #c-table{display:none}
+  .mcard{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:4px 10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
+  .mcard .mk{color:var(--mut);font-size:15px}
+  .mcard .mv{min-width:0;overflow-wrap:anywhere}
+  /* данные фирмы: под схемой, после нажатия – всплывающая панель снизу */
+  #c-sheet{margin-top:12px}
+  #c-sheet .sh-bar{display:none}
+  #c-sheet-body > h3:first-child{margin-top:0!important}
+  #c-sheet.open{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;max-height:62vh;max-height:62dvh;overflow-y:auto;overscroll-behavior:contain;background:#fff;border-top:1px solid #b9bec5;border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.2);padding:0 max(12px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+  #c-sheet.open .sh-bar{display:flex;justify-content:flex-end;position:sticky;top:0;z-index:1;background:#fff;padding:8px 0}
+  .gtip{background:var(--panel);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:16px}
+  .gtip div{margin:2px 0}
+  .gtip i{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+  #m-tip{position:fixed;z-index:40;max-width:calc(100vw - 24px);background:var(--ink);color:#fff;font-size:15px;padding:8px 12px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+  .m-top{display:flex;margin:22px 0 4px}
+}
+@media (min-width:600px) and (max-width:899px){
+  nav,.stages{grid-template-columns:repeat(4,1fr)}
+}
+@media (max-width:899px) and (prefers-reduced-motion:no-preference){
+  #c-sheet.open{animation:sheetUp .22s ease-out}
+  @keyframes sheetUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 }
 </style>
 </head>
@@ -134,12 +176,13 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     <div class="col-main">
       <svg id="c-svg" viewBox="0 0 900 420" role="img" aria-label="Кто кому продал"></svg>
       <div class="legend" id="c-legend"></div>
+      <div id="c-sheet" hidden><div class="sh-bar"><button class="btn" id="c-sheet-x" type="button">Закрыть</button></div><div class="panel" id="c-sheet-body" aria-live="polite"></div></div>
     </div>
     <div class="col-side"><div class="panel" id="c-side"></div></div>
   </div>
 
   <div id="c-answer"></div>
-  <div class="panel" style="margin-top:14px"><h3>Все сделки этого примера</h3><table id="c-table"></table></div>
+  <div class="panel" style="margin-top:14px"><h3>Все сделки этого примера</h3><table id="c-table"></table><div id="c-cards" hidden></div></div>
 </section>
 
 <!-- ================= 2. ОДИН БИЗНЕС ================= -->
@@ -154,9 +197,11 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     <div class="col-main">
       <h2 style="margin-top:4px">Доход каждой фирмы, в процентах от лимита</h2>
       <svg id="g-svg1" viewBox="0 0 900 340" role="img" aria-label="Доход каждой фирмы по годам"></svg>
+      <div class="gtip" id="g-tip1" hidden></div>
       <div class="legend" id="g-legend"></div>
       <h2>А если сложить доходы всех фирм группы?</h2>
       <svg id="g-svg2" viewBox="0 0 900 230" role="img" aria-label="Сумма доходов группы"></svg>
+      <div class="gtip" id="g-tip2" hidden></div>
     </div>
     <div class="col-side">
       <div class="panel"><h3>Что общего у этих фирм</h3><div id="g-feat"></div></div>
@@ -234,10 +279,41 @@ const rub = n => big(n) + " руб.";
 function pw(n, a, b, c){ const m = n % 100, k = n % 10; return (m > 10 && m < 20) ? c : (k === 1 ? a : (k >= 2 && k <= 4 ? b : c)); }
 function chips(box, items, cur, cb){ clear(box); items.forEach((t, i) => { const b = document.createElement("button"); b.textContent = t; b.setAttribute("aria-pressed", i === cur); b.onclick = () => cb(i); box.appendChild(b); }); }
 
+/* ---------------- телефон: всё ниже срабатывает только при ширине до 899 px ---------------- */
+const MQ = window.matchMedia("(max-width: 899px)");
+const isMob = () => MQ.matches;
+const smooth = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+// ширина области рисования в CSS-пикселях: на телефоне 1 единица SVG = 1 пиксель экрана
+function mobW(){ const m = document.querySelector("main"), cs = getComputedStyle(m); return Math.max(260, Math.floor(m.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 2)); }
+const toTabs = () => window.scrollTo({top: Math.max(0, $("tabs").getBoundingClientRect().top + window.scrollY - 8), behavior: smooth()});
+// таблица -> карточки «заголовок столбца: значение»
+function cardify(tb){ const rows = [...tb.rows], hs = [...rows[0].cells].map(c => c.textContent.trim()), st = el => el.getAttribute("style") ? " style=\"" + el.getAttribute("style") + "\"" : "";
+  return rows.slice(1).map(tr => "<div class='mcard'" + st(tr) + ">" + [...tr.cells].map((c, i) => hs[i] ? "<div class='mk'>" + hs[i] + "</div><div class='mv'" + st(c) + ">" + c.innerHTML + "</div>" : "").join("") + "</div>").join(""); }
+let mobBuilt = false, mTip = null;
+function mobileUi(on){
+  if(on && !mobBuilt){ mobBuilt = true;
+    document.querySelectorAll("main section").forEach(s => { const b = document.createElement("button"); b.className = "btn m-top"; b.type = "button"; b.textContent = "Наверх, к вкладкам"; b.onclick = toTabs; s.appendChild(b); });
+    mTip = document.createElement("div"); mTip.id = "m-tip"; mTip.hidden = true; mTip.setAttribute("role", "status"); document.body.appendChild(mTip);
+  }
+  document.querySelectorAll(".m-top").forEach(b => { b.hidden = !on; });
+  ["g-tip1", "g-tip2"].forEach(id => { $(id).hidden = !on; });
+  if(!on){ $("c-cards").hidden = true; $("c-sheet").hidden = true; document.body.style.paddingBottom = ""; if(mTip) mTip.hidden = true; }
+}
+// подсказки, которые на компьютере видны при наведении (атрибут title у полоски «Куда делся налог»), на телефоне – по нажатию
+document.addEventListener("click", e => { if(!isMob() || !mTip) return;
+  const t = e.target.closest ? e.target.closest(".bar [title]") : null;
+  if(!t){ mTip.hidden = true; return; }
+  mTip.textContent = t.getAttribute("title"); mTip.hidden = false;
+  const r = t.getBoundingClientRect(), w = mTip.offsetWidth, h = mTip.offsetHeight;
+  mTip.style.left = Math.max(12, Math.min(window.innerWidth - w - 12, r.left + r.width / 2 - w / 2)) + "px";
+  mTip.style.top = (r.top - h - 8 > 8 ? r.top - h - 8 : r.bottom + 8) + "px"; });
+window.addEventListener("scroll", () => { if(mTip && !mTip.hidden) mTip.hidden = true; }, {passive: true});
+
 /* ---------------- вкладки ---------------- */
 const TABS = [["s-chain", "1. Кто кому продал"], ["s-frag", "2. Один бизнес под видом нескольких"], ["s-rules", "3. Простые правила"], ["s-gaps", "4. Откуда берутся расхождения"]];
-TABS.forEach(([id, name]) => { const b = document.createElement("button"); b.textContent = name; b.setAttribute("role", "tab"); b.dataset.id = id; b.onclick = () => show(id); $("tabs").appendChild(b); });
-function show(id){ document.querySelectorAll("section").forEach(s => s.classList.toggle("on", s.id === id)); $("tabs").querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.id === id)); const ab = $("tabs").querySelector("button[aria-selected=true]"); if(ab && ab.scrollIntoView) ab.scrollIntoView({block: "nearest", inline: "nearest"}); document.querySelectorAll("#s-rules .svgwrap.r").forEach(w => { w.scrollLeft = w.scrollWidth; }); try{ history.replaceState(null, "", "#" + id); }catch(e){} }
+TABS.forEach(([id, name]) => { const b = document.createElement("button"); b.textContent = name; b.setAttribute("role", "tab"); b.dataset.id = id; b.onclick = () => show(id, true); $("tabs").appendChild(b); });
+function show(id, user){ document.querySelectorAll("section").forEach(s => s.classList.toggle("on", s.id === id)); $("tabs").querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.id === id)); const ab = $("tabs").querySelector("button[aria-selected=true]"); if(ab && ab.scrollIntoView) ab.scrollIntoView({block: "nearest", inline: "nearest"}); document.querySelectorAll("#s-rules .svgwrap.r").forEach(w => { w.scrollLeft = w.scrollWidth; }); try{ history.replaceState(null, "", "#" + id); }catch(e){}
+  if(user && isMob()){ const top = $(id).getBoundingClientRect().top; if(top < 0 || top > window.innerHeight * .5) toTabs(); } }
 
 /* =============== 1. КТО КОМУ ПРОДАЛ =============== */
 const RC = {shell: "#D55E00", transit: "#E69F00", beneficiary: "#CC79A7"};
@@ -256,10 +332,71 @@ function money(ch){
     if(n.role_code === "shell"){ R += t.reported; U += t.accrued - t.reported; } });
   return {ded, P, R, U};
 }
-function setStage(s){ stage = s; step = 0; drawChain(); }
+let sheetOpen = false; // телефон: данные фирмы во всплывающей панели снизу
+function setStage(s){ stage = s; step = 0; sheetOpen = false; drawChain(); stepTop(); }
+// телефон: та же схема, но сверху вниз – продавцы, посредники, получатель вычета
+function chainGraphMob(svg, ch, layers, reveal, cur){
+  const W = mobW(), r = 28, below = 44, edge = 62, LBL = 140, pos = {};
+  const ls = Object.keys(layers).map(Number).sort((a, b) => a - b);
+  let y = r + 22;
+  ls.forEach((l, li) => { const a = layers[l].sort((p, q) => p.id.localeCompare(q.id)), k = a.length, spc = Math.min(W / k, 170);
+    a.forEach((n, i) => { pos[n.id] = {x: k === 1 ? Math.min(W / 2, W - r - 12 - LBL) : W / 2 + (i - (k - 1) / 2) * spc, y, side: k === 1}; });
+    if(li < ls.length - 1) y += (k === 1 ? r + 4 : r + below) + edge + r; });
+  const H = Math.round(y + (layers[ls[ls.length - 1]].length === 1 ? r + 16 : r + below) + 6);
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  const defs = S("defs", {}, svg);
+  [["a0", "#8c8c8c"], ["a1", "#C62828"], ["a2", "#1f2328"]].forEach(([id, col]) => { const m = S("marker", {id, viewBox: "0 0 10 10", refX: "9", refY: "5", markerWidth: "14", markerHeight: "14", markerUnits: "userSpaceOnUse", orient: "auto-start-reverse"}, defs); S("path", {d: "M0,0 L10,5 L0,10 z", fill: col}, m); });
+  const amax = Math.max(...ch.edges.map(e => e.amount_mln)), outN = id => ch.edges.filter(e => e.from === id).length, inN = id => ch.edges.filter(e => e.to === id).length;
+  ch.edges.forEach(e => {
+    const a = pos[e.from], b = pos[e.to], sx = a.x, sy = a.y + (a.side ? r + 3 : r + below - 2), dx = b.x - sx, dy = b.y - sy, d = Math.hypot(dx, dy);
+    const ex = b.x - dx / d * (r + 6), ey = b.y - dy / d * (r + 6);
+    const isCur = cur && cur.from === e.from && cur.to === e.to, faded = cur && !isCur;
+    const col = isCur ? "#1f2328" : (e.gap ? "#C62828" : "#8c8c8c");
+    const l = S("line", {x1: sx, y1: sy, x2: ex, y2: ey, stroke: col,
+      "stroke-width": (isCur ? 3 : 1.5) + 4 * e.amount_mln / amax, "marker-end": "url(#" + (isCur ? "a2" : (e.gap ? "a1" : "a0")) + ")", opacity: faded ? .18 : 1}, svg);
+    if(e.gap) l.setAttribute("stroke-dasharray", "10 7");
+    // подпись суммы – рядом со стрелкой, с внешней стороны
+    const tt = outN(e.from) > 1 ? .62 : (inN(e.to) > 1 ? .38 : .5), lx = sx + (ex - sx) * tt, left = lx < W / 2 - 4;
+    S("text", {x: lx + (left ? -10 : 10), y: sy + (ey - sy) * tt + 5, "text-anchor": left ? "end" : "start", "font-size": 13.5, "font-weight": isCur ? 700 : 400, style: "paint-order:stroke;stroke:#fff;stroke-width:5px", opacity: faded ? .25 : 1}, svg, fmt(e.amount_mln, 1) + " млн");
+  });
+  ch.nodes.forEach(n => {
+    const p = pos[n.id], g = S("g", {style: "cursor:pointer", "data-firm": n.id}, svg);
+    const inCur = cur && (cur.from === n.id || cur.to === n.id), faded = cur && !inCur;
+    const gs = guesses.find(x => x === n.id) !== undefined;
+    const fill = reveal ? RC[n.role_code] : "#e9ecef";
+    S("circle", {cx: p.x, cy: p.y, r: r + 8, fill: "transparent"}, g); // зона нажатия больше кружка
+    S("circle", {cx: p.x, cy: p.y, r, fill, stroke: sel === n.id ? "#1f2328" : (gs ? (n.role_code === "beneficiary" ? "#00875A" : "#C62828") : (reveal ? "#fff" : "#9aa1a9")), "stroke-width": (sel === n.id || gs) ? 5 : 2, opacity: faded ? .3 : 1}, g);
+    S("text", {x: p.x, y: p.y + 5, "text-anchor": "middle", "font-size": 15, "font-weight": 700, style: reveal ? "fill:#fff" : "", opacity: faded ? .4 : 1}, g, n.id);
+    const tx = p.side ? p.x + r + 10 : p.x, anc = p.side ? "start" : "middle";
+    S("text", {x: tx, y: p.side ? (reveal ? p.y - 3 : p.y + 5) : p.y + r + 17, "text-anchor": anc, "font-size": 13.5, opacity: faded ? .35 : 1}, g, PLAIN[plain(ch, n.id)]);
+    if(reveal) S("text", {x: tx, y: p.side ? p.y + 16 : p.y + r + 34, "text-anchor": anc, "font-size": 14, "font-weight": 700, style: "fill:" + RC[n.role_code], opacity: faded ? .35 : 1}, g, RN[n.role_code]);
+    if(gs && !reveal) S("text", {x: p.x + 21, y: p.y - 20, "font-size": 22, "font-weight": 700, style: "fill:" + (n.role_code === "beneficiary" ? "#00875A" : "#C62828")}, g, n.role_code === "beneficiary" ? "✓" : "✗");
+    g.onclick = () => { sel = n.id; if(stage === 1 && !guesses.includes(n.id)) guesses.push(n.id); sheetOpen = true; drawChain(); sheetKeep(n.id); };
+  });
+}
+// телефон: показать данные фирмы под схемой; после нажатия – всплывающей панелью снизу
+function chainSheet(hx){
+  const sh = $("c-sheet");
+  if(!isMob()){ sh.hidden = true; return; }
+  $("c-sheet-body").innerHTML = hx; sh.hidden = !hx;
+  if(!hx) sheetOpen = false;
+  sh.classList.toggle("open", sheetOpen);
+  document.body.style.paddingBottom = sheetOpen ? (sh.offsetHeight + 16) + "px" : "";
+}
+// после открытия панели нажатый кружок не должен оказаться под ней
+function sheetKeep(id){
+  if(!isMob() || !sheetOpen) return;
+  const g = $("c-svg").querySelector("[data-firm='" + id + "']"); if(!g) return;
+  const gr = g.getBoundingClientRect(), top = $("c-sheet").getBoundingClientRect().top;
+  if(gr.bottom > top - 8) window.scrollBy({top: gr.bottom - top + 16, behavior: smooth()});
+}
+// телефон: после «Дальше»/«Назад» новый текст шага должен быть виден с начала
+function stepTop(){ if(!isMob()) return; const r = $("c-side").getBoundingClientRect(); if(r.top < 0 || r.top > window.innerHeight * .6) window.scrollTo({top: Math.max(0, r.top + window.scrollY - 8), behavior: smooth()}); }
+$("c-sheet-x").onclick = () => { sheetOpen = false; drawChain(); };
+document.addEventListener("keydown", e => { if(e.key === "Escape" && sheetOpen){ sheetOpen = false; drawChain(); } });
 function drawChain(){
   const ch = D.chains[ci];
-  chips($("c-pick"), D.chains.map((c, i) => "Пример " + (i + 1) + ". " + c.title + " (" + c.nodes.length + " " + pw(c.nodes.length, "фирма", "фирмы", "фирм") + ")"), ci, i => { ci = i; stage = 0; step = 0; sel = null; guesses = []; drawChain(); });
+  chips($("c-pick"), D.chains.map((c, i) => "Пример " + (i + 1) + ". " + c.title + " (" + c.nodes.length + " " + pw(c.nodes.length, "фирма", "фирмы", "фирм") + ")"), ci, i => { ci = i; stage = 0; step = 0; sel = null; guesses = []; sheetOpen = false; drawChain(); });
   const st = $("c-stages"); clear(st);
   STAGES.forEach((t, i) => { const b = document.createElement("button"); b.innerHTML = "<span class='n'>" + (i + 1) + "</span>" + t; b.setAttribute("aria-pressed", i === stage); b.onclick = () => setStage(i); st.appendChild(b); });
   const reveal = stage >= 2, cur = stage === 2 ? ch.edges[step] : null;
@@ -267,6 +404,7 @@ function drawChain(){
   // --- граф
   const svg = $("c-svg"); clear(svg);
   const layers = {}; ch.nodes.forEach(n => (layers[n.layer] = layers[n.layer] || []).push(n));
+  if(isMob()) chainGraphMob(svg, ch, layers, reveal, cur); else {
   const L = Math.max(...Object.keys(layers).map(Number)) + 1, maxc = Math.max(...Object.values(layers).map(a => a.length));
   const W = 900, H = Math.max(330, 125 * maxc + 50); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
   const pos = {};
@@ -296,12 +434,13 @@ function drawChain(){
     if(gs && !reveal) S("text", {x: p.x + 24, y: p.y - 22, "font-size": 22, "font-weight": 700, style: "fill:" + (n.role_code === "beneficiary" ? "#00875A" : "#C62828")}, g, n.role_code === "beneficiary" ? "✓" : "✗");
     g.onclick = () => { sel = n.id; if(stage === 1 && !guesses.includes(n.id)) guesses.push(n.id); drawChain(); };
   });
+  }
   $("c-legend").innerHTML = "<span><b class='solid'></b>стрелка: от продавца к покупателю, подпись – сумма</span><span><b class='dash'></b>разрыв: у покупателя запись есть, у продавца нет</span>" +
     (reveal ? Object.keys(RN).map(k => "<span><i style='background:" + RC[k] + "'></i>" + RN[k] + "</span>").join("") : "<span>кружок – фирма, внутри её номер</span>");
 
   // --- боковая панель
   const side = $("c-side"), m = money(ch), bens = ch.nodes.filter(n => n.role_code === "beneficiary");
-  let h = "";
+  let h = "", hx = ""; // hx – ответ на нажатие кружка (на телефоне показывается отдельно, под схемой)
   if(stage === 0){
     h = "<h3>Что видит налоговая</h3><p style='margin:4px 0'>Только отчёты фирм. Кто из них мошенник, в отчётах <b>не написано</b>.</p>" +
       "<p style='margin:4px 0'>Стрелка идёт <b>от продавца к покупателю</b>. Подпись под кружком – что фирма делает в этой цепочке: только продаёт, только покупает или и то и другое.</p>" +
@@ -312,10 +451,10 @@ function drawChain(){
     h = "<h3>Угадайте мошенника</h3><p style='margin:4px 0'>Нажмите на фирму, которой, по-вашему, <b>схема приносит деньги</b>.</p><p class='small' style='margin:4px 0'>Подсказка: смотрите, где разрывы и кто стоит в конце цепочки.</p>";
     if(last){
       const t = taxOf(ch, last.id);
-      if(last.role_code === "beneficiary") h += "<div class='say good'><b class='ok'>Верно!</b> Фирма " + last.id + " – <b>получатель вычета</b>. Она «купила» товар, которого не было, и уменьшила свой налог на <b>" + M(t.deducted, 2) + "</b>. Ради неё схема и строилась.</div>";
-      else if(last.role_code === "shell") h += "<div class='say bad'><b class='warn'>Не совсем.</b> Фирма " + last.id + " – <b>однодневка</b>, подставная фирма. Она участвует в схеме: её «продажа» не видна в отчётах, отсюда разрыв. Но денег она не получает: её создали, чтобы исчезнуть. Ищите, кому достаётся вычет.</div>";
-      else h += "<div class='say bad'><b class='warn'>Не совсем.</b> Фирма " + last.id + " – <b>посредник</b>. Она передаёт бумаги дальше и платит в бюджет копейки (" + M(t.accrued - t.deducted, 2) + "). Посредник тоже участник, но схема затевается не ради него.</div>";
-      if(last.role_code === "beneficiary") h += "<button class='btn main' onclick='setStage(2)'>Дальше: разбор по шагам →</button>";
+      if(last.role_code === "beneficiary") hx += "<div class='say good'><b class='ok'>Верно!</b> Фирма " + last.id + " – <b>получатель вычета</b>. Она «купила» товар, которого не было, и уменьшила свой налог на <b>" + M(t.deducted, 2) + "</b>. Ради неё схема и строилась.</div>";
+      else if(last.role_code === "shell") hx += "<div class='say bad'><b class='warn'>Не совсем.</b> Фирма " + last.id + " – <b>однодневка</b>, подставная фирма. Она участвует в схеме: её «продажа» не видна в отчётах, отсюда разрыв. Но денег она не получает: её создали, чтобы исчезнуть. Ищите, кому достаётся вычет.</div>";
+      else hx += "<div class='say bad'><b class='warn'>Не совсем.</b> Фирма " + last.id + " – <b>посредник</b>. Она передаёт бумаги дальше и платит в бюджет копейки (" + M(t.accrued - t.deducted, 2) + "). Посредник тоже участник, но схема затевается не ради него.</div>";
+      if(last.role_code === "beneficiary") hx += "<button class='btn main' onclick='setStage(2)'>Дальше: разбор по шагам →</button>";
     }
   } else if(stage === 2){
     const e = cur, s = node(ch, e.from), b = node(ch, e.to), ts = taxOf(ch, s.id);
@@ -338,11 +477,12 @@ function drawChain(){
     const rows = [["Покупает у", ch.edges.filter(e => e.to === n.id).map(e => e.from).join(", ") || "ни у кого в этой цепочке"], ["Продаёт фирмам", ch.edges.filter(e => e.from === n.id).map(e => e.to).join(", ") || "никому в этой цепочке"],
       ["Существует", n.life_q + " из 12 кварталов" + (n.closed ? " (закрылась)" : "")], ["Работников", n.hc], ["Адрес", n.addr + (n.addr_n > 1 ? " (на нём " + n.addr_n + " " + pw(n.addr_n, "фирма", "фирмы", "фирм") + ")" : "")],
       ["Покупателей в её отчётах", n.customers], ["Поставщиков в её отчётах", n.suppliers], ["Не сдала деклараций", n.not_filed], ["Сдала пустых деклараций", n.zero]];
-    h += "<h3 style='margin-top:14px'>Фирма " + n.id + (stage >= 2 ? " – <span style='color:" + RC[n.role_code] + "'>" + RN[n.role_code] + "</span>" : "") + "</h3><table>" + rows.map(r => "<tr><td>" + r[0] + "</td><td><b>" + r[1] + "</b></td></tr>").join("") + "</table>";
+    hx += "<h3 style='margin-top:14px'>Фирма " + n.id + (stage >= 2 ? " – <span style='color:" + RC[n.role_code] + "'>" + RN[n.role_code] + "</span>" : "") + "</h3><table>" + rows.map(r => "<tr><td>" + r[0] + "</td><td><b>" + r[1] + "</b></td></tr>").join("") + "</table>";
   }
-  side.innerHTML = h.replace(/руб\.\./g, "руб.");
-  if($("c-prev")) $("c-prev").onclick = () => { step = Math.max(0, step - 1); drawChain(); };
-  if($("c-next")) $("c-next").onclick = () => { step = Math.min(ch.edges.length - 1, step + 1); drawChain(); };
+  if(isMob()){ side.innerHTML = h.replace(/руб\.\./g, "руб."); chainSheet(hx.replace(/руб\.\./g, "руб.")); }
+  else { side.innerHTML = (h + hx).replace(/руб\.\./g, "руб."); chainSheet(""); }
+  if($("c-prev")) $("c-prev").onclick = () => { step = Math.max(0, step - 1); drawChain(); stepTop(); };
+  if($("c-next")) $("c-next").onclick = () => { step = Math.min(ch.edges.length - 1, step + 1); drawChain(); stepTop(); };
 
   // --- ответ: куда делся налог
   const ans = $("c-answer");
@@ -364,6 +504,7 @@ function drawChain(){
     });
     t += "</table><p class='small' style='margin:6px 0 0'>Суммы в млн руб., только по сделкам внутри этой схемы.</p></div>";
     ans.innerHTML = t.replace(/руб\.\./g, "руб.");
+    if(isMob()){ const tb = ans.querySelector("table"); tb.insertAdjacentHTML("afterend", "<div class='mcards'>" + cardify(tb) + "</div>"); tb.remove(); }
   } else ans.innerHTML = "";
 
   // --- таблица сделок
@@ -371,22 +512,25 @@ function drawChain(){
   $("c-table").innerHTML = "<tr><th>Продавец</th><th></th><th>Покупатель</th><th class='n'>Сумма</th><th class='n'>НДС в цене</th><th>Записи сходятся?</th></tr>" +
     ch.edges.map((e, i) => "<tr" + (stage === 2 && i === step ? " style='background:#eef5fb'" : "") + "><td>" + nm(e.from) + "</td><td>→</td><td>" + nm(e.to) + "</td><td class='n'>" + M(e.amount_mln) + "</td><td class='n'>" + M(e.vat_mln, 2) + "</td><td>" +
       (e.gap ? "<span class='warn'>Нет, разрыв</span>" + (reveal ? "<br><span class='small'>" + e.reason + "</span>" : "") : "<span class='ok'>Да</span>") + "</td></tr>").join("");
+  if(isMob()){ $("c-cards").innerHTML = cardify($("c-table")); $("c-cards").hidden = false; } else $("c-cards").hidden = true;
 }
 
 /* =============== 2. ОДИН БИЗНЕС =============== */
 const GC = ["#0072B2", "#009E73", "#E69F00", "#CC79A7", "#56B4E9", "#D55E00"];
-let gi = 0, gAns = null;
+let gi = 0, gAns = null, gYear = null, gRow = null; // gYear, gRow – выбранный год на графиках (только телефон)
+const dot = j => "<i style='background:" + GC[j % GC.length] + "'></i>";
 function drawGroup(){
   const g = D.groups[gi];
   $("g-limit").textContent = fmt(D.rules.limit_mln, 1) + " млн руб. в год";
-  chips($("g-pick"), D.groups.map((x, i) => "Пример " + (i + 1) + ". " + x.title + " (" + x.members.length + " " + pw(x.members.length, "фирма", "фирмы", "фирм") + ")"), gi, i => { gi = i; gAns = null; drawGroup(); });
+  chips($("g-pick"), D.groups.map((x, i) => "Пример " + (i + 1) + ". " + x.title + " (" + x.members.length + " " + pw(x.members.length, "фирма", "фирмы", "фирм") + ")"), gi, i => { gi = i; gAns = null; gYear = null; gRow = null; drawGroup(); });
   // график 1: столбики по годам
   const svg = $("g-svg1"); clear(svg);
-  const MOB = window.innerWidth < 700;
-  const W = MOB ? 380 : 900, H = MOB ? 250 : 340, ml = MOB ? 40 : 96, mr = MOB ? 6 : 16, mt = MOB ? 28 : 20, mb = MOB ? 34 : 46, ymax = 110;
+  const MOB = isMob();
+  const W = MOB ? mobW() : 900, H = MOB ? 250 : 340, ml = MOB ? 40 : 96, mr = MOB ? 6 : 16, mt = MOB ? 28 : 20, mb = MOB ? 34 : 46, ymax = 110;
   svg.setAttribute("viewBox", "0 0 " + W + " " + H);
-  const FA = MOB ? 11 : 13, FY = MOB ? 13 : 15, FV = MOB ? 11 : 12;
-  const y = v => mt + (H - mt - mb) * (1 - v / ymax), n = g.members.length, gw = (W - ml - mr) / 3, bw = Math.min(46, (gw - 40) / n);
+  const FA = MOB ? 12 : 13, FY = MOB ? 14 : 15, FV = 12;
+  const y = v => mt + (H - mt - mb) * (1 - v / ymax), n = g.members.length, gw = (W - ml - mr) / 3, bw = Math.min(46, (gw - (MOB ? 16 : 40)) / n);
+  if(MOB && gYear !== null) S("rect", {x: ml + gYear * gw + 4, y: 4, width: gw - 8, height: H - 8, fill: "#eef5fb", rx: 6}, svg);
   [0, 25, 50, 75].forEach(v => { S("line", {x1: ml, x2: W - mr, y1: y(v), y2: y(v), stroke: "#eceef0"}, svg); S("text", {x: ml - 6, y: y(v) + 4, "text-anchor": "end", "font-size": FA}, svg, v + " %"); });
   S("line", {x1: ml, x2: W - mr, y1: y(100), y2: y(100), stroke: "#C62828", "stroke-width": 3, "stroke-dasharray": "8 5"}, svg);
   for(let k = 0; k < 3; k++){
@@ -395,28 +539,38 @@ function drawGroup(){
     g.members.forEach((m, j) => { const v = m.ratio[k]; if(v === null) { S("text", {x: x0 + j * bw + bw / 2, y: y(0) - 6, "text-anchor": "middle", "font-size": 12, style: "fill:#999"}, svg, "–"); return; }
       const r = S("rect", {x: x0 + j * bw + 2, y: y(Math.min(v, ymax)), width: bw - 4, height: y(0) - y(Math.min(v, ymax)), fill: GC[j % GC.length], rx: 3}, svg);
       S("title", {}, r, "Фирма " + m.id + ", год " + (k + 1) + ": " + fmt(m.income_mln[k]) + " млн руб. (" + fmt(v) + " % лимита)");
-      if(bw > (MOB ? 15 : 26)) S("text", {x: x0 + j * bw + bw / 2, y: y(Math.min(v, ymax)) - 4, "text-anchor": "middle", "font-size": FV, style: "paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round"}, svg, Math.round(v));
+      if(bw > (MOB ? 15.5 : 26)) S("text", {x: x0 + j * bw + bw / 2, y: y(Math.min(v, ymax)) - 4, "text-anchor": "middle", "font-size": FV, style: "paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round"}, svg, Math.round(v));
     });
+    if(MOB){ const z = S("rect", {x: ml + k * gw + 4, y: 4, width: gw - 8, height: H - 8, fill: "transparent", class: "tapzone", "data-year": k, style: "cursor:pointer"}, svg);
+      z.onclick = () => { gYear = k; drawGroup(); $("g-tip1").scrollIntoView({block: "nearest", behavior: smooth()}); }; }
   }
+  if(MOB) $("g-tip1").innerHTML = gYear === null ? "<span class='small'>Нажмите на год, чтобы увидеть доход каждой фирмы.</span>" :
+    g.members.map((m, j) => m.ratio[gYear] === null ? "" : "<div>" + dot(j) + "Фирма " + m.id + ", год " + (gYear + 1) + ": " + fmt(m.income_mln[gYear]) + " млн руб. (" + fmt(m.ratio[gYear]) + " % лимита)</div>").join("");
   if(MOB) S("text", {x: W - mr, y: y(100) - 16, "text-anchor": "end", "font-size": 12, "font-weight": 700, style: "fill:#C62828"}, svg, "лимит 100 %");
   else S("text", {x: ml - 8, y: y(100) + 5, "text-anchor": "end", "font-size": 14, "font-weight": 700, style: "fill:#C62828"}, svg, "лимит 100 %");
   $("g-legend").innerHTML = g.members.map((m, j) => "<span><i style='background:" + GC[j % GC.length] + "'></i>фирма " + m.id + (m.new ? " (появилась позже)" : "") + "</span>").join("") + "<span class='small'>число над столбиком – % лимита</span>";
   // график 2: сумма
   const s2 = $("g-svg2"); clear(s2);
-  const W2 = MOB ? 380 : 900, ml2 = MOB ? 44 : 70, mr2 = MOB ? 8 : 150, rowH = MOB ? 30 : 52, top = MOB ? 34 : 18, gap = MOB ? 34 : 14, xmax = Math.max(...g.total_ratio) * 1.05;
+  const W2 = MOB ? mobW() : 900, ml2 = MOB ? 44 : 70, mr2 = MOB ? 8 : 150, rowH = MOB ? 30 : 52, top = MOB ? 34 : 18, gap = MOB ? 34 : 14, xmax = Math.max(...g.total_ratio) * 1.05;
   s2.setAttribute("viewBox", "0 0 " + W2 + " " + (top + 3 * (rowH + gap) + (MOB ? -10 : 10)));
-  const x = v => ml2 + (W2 - ml2 - mr2) * v / xmax;
+  const x = v => ml2 + (W2 - ml2 - mr2) * v / xmax, mLabs = [];
   for(let k = 0; k < 3; k++){
     const yy = top + k * (rowH + gap); let acc = 0;
-    S("text", {x: ml2 - (MOB ? 6 : 8), y: yy + rowH / 2 + 5, "text-anchor": "end", "font-size": MOB ? 12 : 15, "font-weight": 600}, s2, "Год " + (k + 1));
+    if(MOB && gRow === k) S("rect", {x: 2, y: yy - gap + 8, width: W2 - 4, height: rowH + gap - 8, fill: "#eef5fb", rx: 6}, s2);
+    S("text", {x: ml2 - (MOB ? 6 : 8), y: yy + rowH / 2 + 5, "text-anchor": "end", "font-size": MOB ? 13 : 15, "font-weight": 600}, s2, "Год " + (k + 1));
     g.members.forEach((m, j) => { const v = m.ratio[k] || 0; if(!v) return;
       const r = S("rect", {x: x(acc), y: yy, width: x(acc + v) - x(acc), height: rowH, fill: GC[j % GC.length], stroke: "#fff", "stroke-width": 2}, s2);
       S("title", {}, r, "Фирма " + m.id + ": " + fmt(v) + " % лимита"); acc += v; });
-    if(MOB) S("text", {x: ml2, y: yy - 7, "font-size": 13, "font-weight": 700}, s2, "вместе " + g.total_ratio[k] + " % лимита");
+    if(MOB) mLabs.push(S("text", {x: ml2, y: yy - 7, "font-size": 13, "font-weight": 700, style: "paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round;pointer-events:none"}, s2, "вместе " + g.total_ratio[k] + " % лимита"));
     else S("text", {x: x(acc) + 8, y: yy + rowH / 2 + 6, "font-size": 16, "font-weight": 700}, s2, "вместе " + g.total_ratio[k] + " %");
+    if(MOB){ const z = S("rect", {x: 2, y: yy - gap + 8, width: W2 - 4, height: rowH + gap - 8, fill: "transparent", class: "tapzone", "data-row": k, style: "cursor:pointer"}, s2);
+      z.onclick = () => { gRow = k; drawGroup(); $("g-tip2").scrollIntoView({block: "nearest", behavior: smooth()}); }; }
   }
+  if(MOB) $("g-tip2").innerHTML = gRow === null ? "<span class='small'>Нажмите на полоску года, чтобы увидеть долю каждой фирмы.</span>" :
+    "<div><b>Год " + (gRow + 1) + "</b></div>" + g.members.map((m, j) => !m.ratio[gRow] ? "" : "<div>" + dot(j) + "Фирма " + m.id + ": " + fmt(m.ratio[gRow]) + " % лимита</div>").join("");
   S("line", {x1: x(100), x2: x(100), y1: MOB ? 18 : 6, y2: top + 3 * (rowH + gap) - (MOB ? gap - 4 : 6), stroke: "#C62828", "stroke-width": MOB ? 2 : 3, "stroke-dasharray": "8 5"}, s2);
   S("text", {x: x(100) + 4, y: MOB ? 13 : 14, "font-size": MOB ? 12 : 13, "font-weight": 700, style: "fill:#C62828"}, s2, "лимит");
+  mLabs.forEach(t => s2.appendChild(t)); // телефон: подписи «вместе …» поверх линии лимита
   // признаки
   const yes = g.features.filter(f => f.yes).length;
   $("g-feat").innerHTML = "<p style='margin:0 0 6px'>Совпадает <b>" + yes + " из " + g.features.length + "</b> признаков.</p>" + g.features.map(f => "<div class='feat'><span class='pill " + (f.yes ? "y" : "n") + "'>" + (f.yes ? "Да" : "Нет") + "</span><div><b>" + f.name + "</b><br><span class='small' style='color:#333'>" + f.text + "</span></div></div>").join("");
@@ -451,6 +605,7 @@ function drawRules(){
   const inp = $("r-thr"); inp.value = t; $("r-out").textContent = t + " %";
   $("r-unit").textContent = "1 точка ≈ " + d.unit + " " + pw(d.unit, ...R.unitWord);
   // точечная диаграмма
+  if(isMob()) rulesDotsMob(R, d, t); else {
   const svg = $("r-svg"); clear(svg);
   const W = 900, ml = 118, mr = 20, nb = d.good_hist.length, bw = (W - ml - mr) / nb, rr = Math.min(5.2, bw / 5), sp = 2 * rr + 2, cols = 2;
   const dots = c => c > 0 ? Math.max(1, Math.round(c / d.unit)) : 0;
@@ -482,6 +637,7 @@ function drawRules(){
   svg.onpointerdown = ev => { if(ev.pointerType === "touch") return; svg.setPointerCapture(ev.pointerId); setFromEvent(ev); svg.onpointermove = setFromEvent; };
   svg.onpointerup = () => { svg.onpointermove = null; };
   svg.style.cursor = "ew-resize";
+  }
   // цифры
   const F = d.bad_flag[k], Hn = d.good_flag[k], tot = F + Hn, P = tot ? Math.round(F / tot * 100) : 0;
   const u = R.unitWord, wb = n => pw(n, ...u);
@@ -499,7 +655,8 @@ function drawRules(){
   }
   $("r-say").innerHTML = s;
   // график компромисса
-  const s2 = $("r-svg2"); clear(s2);
+  if(isMob()){ rulesLineMob(d, t, F, Hn); return; }
+  const s2 = $("r-svg2"); clear(s2); s2.setAttribute("viewBox", "0 0 900 260"); // вернуть исходный размер после телефонной версии
   const W2 = 900, H2 = 260, l2 = 60, r2 = 20, t2 = 16, b2 = 40, ymax = Math.max(...d.bad_flag, ...d.good_flag) * 1.08;
   const xx = v => l2 + (v - 50) / 50 * (W2 - l2 - r2), yy = v => t2 + (H2 - t2 - b2) * (1 - v / ymax);
   for(let v = 50; v <= 100; v += 10){ S("text", {x: xx(v), y: H2 - 14, "text-anchor": "middle", "font-size": 13}, s2, v + " %"); S("line", {x1: xx(v), x2: xx(v), y1: t2, y2: H2 - b2, stroke: "#f0f1f3"}, s2); }
@@ -512,7 +669,62 @@ function drawRules(){
   S("circle", {cx: xx(t), cy: yy(Hn), r: 7, fill: "#0072B2", stroke: "#fff", "stroke-width": 2}, s2);
   S("text", {x: (W2) / 2, y: H2 - 0, "text-anchor": "middle", "font-size": 13, style: "fill:#5f6670"}, s2, "порог");
 }
-$("r-thr").oninput = e => { thr[RULES[ri].key] = +e.target.value; drawRules(); };
+// телефон: точечная диаграмма в масштабе 1:1, подписи не обрезаются
+function rulesDotsMob(R, d, t){
+  const svg = $("r-svg"); clear(svg);
+  const W = mobW(), ml = 22, mr = 22, nb = d.good_hist.length, bw = (W - ml - mr) / nb, wide = bw >= 24;
+  const unit = wide ? d.unit : d.unit * 2, cols = wide ? 2 : 1, rr = wide ? Math.min(5.2, bw / 5) : Math.min(5, bw / 2 - 1.2), sp = 2 * rr + 2;
+  $("r-unit").textContent = "1 точка ≈ " + unit + " " + pw(unit, ...R.unitWord);
+  const dots = c => c > 0 ? Math.max(1, Math.round(c / unit)) : 0;
+  const topRows = Math.max(...d.good_hist.map(c => Math.ceil(dots(c) / cols))), botRows = Math.max(...d.bad_hist.map(c => Math.ceil(dots(c) / cols)));
+  const band = 44, y0 = Math.round(band + 30 + topRows * sp), H = Math.round(y0 + 28 + botRows * sp + 70);
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  const X = v => ml + (v - d.lo) / (d.hi - d.lo) * (W - ml - mr);
+  S("rect", {x: X(t), y: band - 6, width: W - mr - X(t), height: H - 46 - band + 6, fill: "#fdecea"}, svg);
+  S("text", {x: 8, y: band + 16, "font-size": 15, "font-weight": 700, style: "fill:#0072B2"}, svg, "честные ↑");
+  S("text", {x: 8, y: y0 + 19, "font-size": 15, "font-weight": 700, style: "fill:#D55E00"}, svg, "нарушители ↓");
+  S("line", {x1: ml, x2: W - mr, y1: y0, y2: y0, stroke: "#9aa1a9"}, svg);
+  const drawSide = (hist, col, dir, off) => hist.forEach((c, b) => { const nd = dots(c), cx0 = ml + b * bw + bw / 2 - (cols - 1) * sp / 2, center = d.lo + (b + .5) * d.step, on = center >= t;
+    for(let i = 0; i < nd; i++){ const cx = cx0 + (i % cols) * sp, cy = y0 + dir * (off + Math.floor(i / cols) * sp);
+      S("circle", {cx, cy, r: rr, fill: col, opacity: on ? 1 : .22}, svg); } });
+  drawSide(d.good_hist, "#0072B2", -1, 10); drawSide(d.bad_hist, "#D55E00", 1, 28);
+  const tsp = 10 / (d.hi - d.lo) * (W - ml - mr), pct = tsp >= 45, every = tsp < 24 ? 20 : 10;
+  for(let v = d.lo; v <= d.hi; v += 10){ S("line", {x1: X(v), x2: X(v), y1: H - 46, y2: H - 40, stroke: "#666"}, svg);
+    if((v - d.lo) % every === 0) S("text", {x: X(v), y: H - 24, "text-anchor": "middle", "font-size": 13}, svg, v + (pct ? " %" : "")); }
+  S("text", {x: (ml + W - mr) / 2, y: H - 6, "text-anchor": "middle", "font-size": 14, style: "fill:#5f6670"}, svg, R.axis);
+  S("path", {d: "M" + X(R.fns) + "," + (H - 46) + " l-7,-12 l14,0 z", fill: "#1f2328"}, svg);
+  S("text", {x: X(R.fns) - 10, y: H - 52, "text-anchor": "end", "font-size": 13}, svg, "порог ФНС " + R.fns + " %");
+  S("line", {x1: X(t), x2: X(t), y1: 8, y2: H - 46, stroke: "#C62828", "stroke-width": 4}, svg);
+  const bx = Math.min(Math.max(X(t), ml + 30), W - mr - 30);
+  S("rect", {x: bx - 30, y: 6, width: 60, height: 30, rx: 6, fill: "#C62828"}, svg);
+  S("text", {x: bx, y: 27, "text-anchor": "middle", "font-size": 16, "font-weight": 700, style: "fill:#fff"}, svg, t + " %");
+  const L1 = "за чертой – на проверку →", L2 = "на проверку →", w1 = textW(L1, 15, 700), w2 = textW(L2, 15, 700), st = {y: 27, "font-size": 15, "font-weight": 700, style: "fill:#C62828"};
+  if(bx + 40 + w1 <= W - 4) S("text", {...st, x: bx + 40}, svg, L1);
+  else if(bx + 40 + w2 <= W - 4) S("text", {...st, x: bx + 40}, svg, L2);
+  else S("text", {...st, x: bx - 40, "text-anchor": "end"}, svg, bx - 40 - w1 >= 4 ? L1 : L2);
+  const setFromEvent = ev => { const pt = svg.getBoundingClientRect(), vx = (ev.clientX - pt.left) / pt.width * W, v = Math.round(d.lo + (vx - ml) / (W - ml - mr) * (d.hi - d.lo)); thr[R.key] = Math.max(50, Math.min(100, v)); drawRules(); };
+  svg.onpointerdown = ev => { if(ev.pointerType === "touch") return; svg.setPointerCapture(ev.pointerId); setFromEvent(ev); svg.onpointermove = setFromEvent; };
+  svg.onpointerup = () => { svg.onpointermove = null; };
+  svg.style.cursor = "ew-resize";
+}
+// телефон: график «что даёт каждый порог» в масштабе 1:1
+function rulesLineMob(d, t, F, Hn){
+  const s2 = $("r-svg2"); clear(s2);
+  const W2 = mobW(), H2 = 236, l2 = 48, r2 = 24, t2 = 14, b2 = 46, ymax = Math.max(...d.bad_flag, ...d.good_flag) * 1.08;
+  s2.setAttribute("viewBox", "0 0 " + W2 + " " + H2);
+  const xx = v => l2 + (v - 50) / 50 * (W2 - l2 - r2), yy = v => t2 + (H2 - t2 - b2) * (1 - v / ymax);
+  for(let v = 50; v <= 100; v += 10){ S("text", {x: xx(v), y: H2 - 26, "text-anchor": "middle", "font-size": 13}, s2, v + " %"); S("line", {x1: xx(v), x2: xx(v), y1: t2, y2: H2 - b2, stroke: "#f0f1f3"}, s2); }
+  const ys = Math.pow(10, Math.floor(Math.log10(ymax))) / (ymax / Math.pow(10, Math.floor(Math.log10(ymax))) < 3 ? 2 : 1);
+  for(let v = 0; v <= ymax; v += ys){ S("text", {x: l2 - 8, y: yy(v) + 5, "text-anchor": "end", "font-size": 13}, s2, big(Math.round(v))); S("line", {x1: l2, x2: W2 - r2, y1: yy(v), y2: yy(v), stroke: "#f0f1f3"}, s2); }
+  const line = (arr, col) => S("polyline", {points: arr.map((v, i) => xx(50 + i) + "," + yy(v)).join(" "), fill: "none", stroke: col, "stroke-width": 3.5}, s2);
+  line(d.bad_flag, "#D55E00"); line(d.good_flag, "#0072B2");
+  S("line", {x1: xx(t), x2: xx(t), y1: t2, y2: H2 - b2, stroke: "#C62828", "stroke-width": 3}, s2);
+  S("circle", {cx: xx(t), cy: yy(F), r: 7, fill: "#D55E00", stroke: "#fff", "stroke-width": 2}, s2);
+  S("circle", {cx: xx(t), cy: yy(Hn), r: 7, fill: "#0072B2", stroke: "#fff", "stroke-width": 2}, s2);
+  S("text", {x: (l2 + W2 - r2) / 2, y: H2 - 6, "text-anchor": "middle", "font-size": 13, style: "fill:#5f6670"}, s2, "порог");
+}
+let rRaf = 0; // телефон: перерисовка не чаще одного раза за кадр
+$("r-thr").oninput = e => { thr[RULES[ri].key] = +e.target.value; if(isMob()){ if(!rRaf) rRaf = requestAnimationFrame(() => { rRaf = 0; drawRules(); }); } else drawRules(); };
 $("r-fns").onclick = () => { thr[RULES[ri].key] = RULES[ri].fns; drawRules(); };
 
 /* =============== 4. РАСХОЖДЕНИЯ =============== */
@@ -538,10 +750,48 @@ function drawBooks(){
   let h = "<div class='say " + (ok ? "good" : (row.kind === "scheme" ? "bad" : "neutral")) + "' style='margin-bottom:6px'>" +
     (ok ? "<b class='ok'>Пример: записи совпали.</b> Номер, суммы, ИНН и код одинаковые – пара найдена, вопросов нет." :
       "<b>" + row.name + "</b> " + (row.kind === "scheme" ? "<span class='warn'>(схема)</span>" : "<span style='color:var(--blue);font-weight:700'>(обычная ошибка)</span>") + ". " + row.text + " Красным выделено то, что не совпало.") +
-    (row ? " <button class='btn' id='x-reset' style='margin-left:8px;font-size:14px;padding:3px 10px'>показать совпавшую пару</button>" : "") + "</div>";
+    (row ? " <button class='btn' id='x-reset' style='margin-left:8px;font-size:14px;padding:3px 10px'>показать совпавшую пару</button>" : "") +
+    (row && isMob() ? "<button class='btn' id='x-back'>Назад к графику</button>" : "") + "</div>";
   h += "<div class='books'>" + book("b8", ex) + "<div class='mid' style='color:" + (ok ? "var(--green)" : "var(--red)") + "'>" + (ok ? "=" : "≠") + "</div>" + book("s9", ex) + "</div>";
   $("x-books").innerHTML = h;
   if($("x-reset")) $("x-reset").onclick = () => { xsel = null; drawGaps(); };
+  if($("x-back")) $("x-back").onclick = () => { const g = $("x-svg").querySelector("[data-row='" + xsel + "']"); if(g) g.scrollIntoView({block: "center", behavior: smooth()}); };
+}
+// телефон: длинные названия причин переносятся на следующую строку, а не обрезаются
+function gapsSvgMob(tech, sch, val, lab){
+  const G = D.gaps, svg = $("x-svg"); clear(svg);
+  const W = mobW(), ml = 10, FS = 14, LH = 18, bh = 14;
+  const mr = Math.ceil(Math.max(...G.rows.map(r => textW(lab(r), 13.5, 600))) + 40), wrapW = W - ml - 2 - 34;
+  const vmax = Math.max(...G.rows.map(val)), X = v => (W - ml - mr) * v / vmax;
+  const wrap = s => { const out = []; let line = ""; s.split(" ").forEach(w => { const tst = line ? line + " " + w : w; if(line && textW(tst, FS, 700) > wrapW){ out.push(line); line = w; } else line = tst; }); if(line) out.push(line); return out; };
+  const lines = G.rows.map(r => wrap(r.name)), groups = [["Обычные ошибки", tech, "#0072B2"], ["Схемы", sch, "#D55E00"]];
+  let H = 12; groups.forEach(([, rows]) => { H += 36; rows.forEach(r => { H += lines[r.i].length * LH + 30 + 8; }); });
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  let yy = 10, first = true;
+  groups.forEach(([title, rows, col]) => {
+    const head = S("text", {x: 8, y: yy + 24, "font-size": 15, "font-weight": 700, style: "fill:" + col}, svg, title + " – всего " + (xm === 0 ? big(rows.reduce((s, r) => s + r.n, 0)) + " случаев" : fmt(rows.reduce((s, r) => s + r.pct, 0).toFixed(2)) + " % вычетов"));
+    yy += 36;
+    rows.forEach(r => {
+      const on = xsel === r.i, ln = lines[r.i], rh = ln.length * LH + 30;
+      const g = S("g", {style: "cursor:pointer", "data-row": r.i}, svg);
+      S("rect", {x: 2, y: yy, width: W - 4, height: rh, fill: on ? "#eef5fb" : "transparent", rx: 6}, g);
+      const tl = S("text", {x: ml + 2, y: yy + 19, "font-size": FS, "font-weight": on ? 700 : 400}, g);
+      ln.forEach((s, j) => S("tspan", {x: ml + 2, dy: j ? LH : 0}, tl, s));
+      const by = yy + 6 + ln.length * LH + 4;
+      S("rect", {x: ml, y: by, width: Math.max(2, X(val(r))), height: bh, fill: col, rx: 3}, g);
+      const tv = S("text", {x: ml + X(val(r)) + 6, y: by + bh / 2 + 5, "font-size": 13.5, "font-weight": 600}, g, lab(r));
+      if(first){ // номера «как читать»
+        const mk = (cx, cy, n) => { S("circle", {cx: Math.min(cx, W - 14), cy, r: 12, fill: "#1f2328"}, svg); S("text", {x: Math.min(cx, W - 14), y: cy + 5, "text-anchor": "middle", "font-size": 13, "font-weight": 700, style: "fill:#fff"}, svg, n); };
+        mk(ml + 2 + textW(ln[ln.length - 1], FS, on ? 700 : 400) + 16, yy + 14 + (ln.length - 1) * LH, "1");
+        mk(ml + Math.max(14, X(val(r)) / 2), by + bh / 2, "2");
+        mk(8 + textW(head.textContent, 15, 700) + 18, yy - 36 + 19, "3");
+        mk(ml + X(val(r)) + 6 + textW(tv.textContent, 13.5, 600) + 16, by + bh / 2, "4");
+        first = false;
+      }
+      g.onclick = () => { xsel = r.i; drawGaps(); window.scrollTo({top: Math.max(0, $("x-books").getBoundingClientRect().top + window.scrollY - 12), behavior: smooth()}); };
+      yy += rh + 8;
+    });
+  });
 }
 function drawGaps(){
   const G = D.gaps, key = xm === 0 ? "n" : "pct";
@@ -549,35 +799,33 @@ function drawGaps(){
   const val = r => r[key], lab = r => xm === 0 ? big(r.n) : fmt(r.pct.toFixed(2)) + " %";
   const tech = G.rows.map((r, i) => ({...r, i})).filter(r => r.kind === "technical").sort((a, b) => val(b) - val(a));
   const sch = G.rows.map((r, i) => ({...r, i})).filter(r => r.kind === "scheme").sort((a, b) => val(b) - val(a));
+  if(isMob()) gapsSvgMob(tech, sch, val, lab); else {
   const svg = $("x-svg"); clear(svg);
-  const MOB = window.innerWidth < 700;
-  const W = MOB ? 380 : 900, ml = MOB ? 10 : 380, mr = MOB ? 58 : 90, rh = MOB ? 44 : 30, gh = MOB ? 34 : 40, H = 20 + gh * 2 + rh * (tech.length + sch.length) + 10;
+  const W = 900, ml = 380, mr = 90, rh = 30, gh = 40, H = 20 + gh * 2 + rh * (tech.length + sch.length) + 10;
   svg.setAttribute("viewBox", "0 0 " + W + " " + H);
   const vmax = Math.max(...G.rows.map(val)), X = v => (W - ml - mr) * v / vmax;
   let yy = 14, first = true;
   [["Обычные ошибки", tech, "#0072B2"], ["Схемы", sch, "#D55E00"]].forEach(([title, rows, col]) => {
-    const head = S("text", {x: MOB ? 8 : 12, y: yy + (MOB ? 22 : 24), "font-size": MOB ? 14.5 : 17, "font-weight": 700, style: "fill:" + col}, svg, title + " – всего " + (xm === 0 ? big(rows.reduce((s, r) => s + r.n, 0)) + " случаев" : fmt(rows.reduce((s, r) => s + r.pct, 0).toFixed(2)) + " % вычетов"));
+    const head = S("text", {x: 12, y: yy + 24, "font-size": 17, "font-weight": 700, style: "fill:" + col}, svg, title + " – всего " + (xm === 0 ? big(rows.reduce((s, r) => s + r.n, 0)) + " случаев" : fmt(rows.reduce((s, r) => s + r.pct, 0).toFixed(2)) + " % вычетов"));
     yy += gh;
     rows.forEach(r => {
       const g = S("g", {style: "cursor:pointer"}, svg), on = xsel === r.i;
       S("rect", {x: 4, y: yy - 2, width: W - 8, height: rh, fill: on ? "#eef5fb" : "transparent", rx: 4}, g);
-      const tl = MOB ? S("text", {x: ml + 2, y: yy + 14, "font-size": 13, "font-weight": on ? 700 : 400}, g, r.name.length > 50 ? r.name.slice(0, 48) + "…" : r.name)
-                     : S("text", {x: ml - 10, y: yy + rh / 2 + 3, "text-anchor": "end", "font-size": 14.5, "font-weight": on ? 700 : 400}, g, r.name.length > 46 ? r.name.slice(0, 44) + "…" : r.name);
-      const by = MOB ? yy + 20 : yy + 4, bh = MOB ? 14 : rh - 10;
+      const tl = S("text", {x: ml - 10, y: yy + rh / 2 + 3, "text-anchor": "end", "font-size": 14.5, "font-weight": on ? 700 : 400}, g, r.name.length > 46 ? r.name.slice(0, 44) + "…" : r.name);
+      const by = yy + 4, bh = rh - 10;
       S("rect", {x: ml, y: by, width: Math.max(2, X(val(r))), height: bh, fill: col, rx: 3}, g);
-      const tv = S("text", {x: ml + X(val(r)) + 6, y: by + bh / 2 + 5, "font-size": MOB ? 13 : 14, "font-weight": 600}, g, lab(r));
+      const tv = S("text", {x: ml + X(val(r)) + 6, y: by + bh / 2 + 5, "font-size": 14, "font-weight": 600}, g, lab(r));
       if(first){ // номера «как читать»
         const mk = (cx, cy, n) => { S("circle", {cx, cy, r: 12, fill: "#1f2328"}, svg); S("text", {x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 13, "font-weight": 700, style: "fill:#fff"}, svg, n); };
         const w1 = textW(tl.textContent, 14.5, on ? 700 : 400), w4 = textW(tv.textContent, 14, 600), wh = textW(head.textContent, 17, 700);
-        if(MOB){ const w1m = textW(tl.textContent, 13, on ? 700 : 400), w4m = textW(tv.textContent, 13, 600), whm = textW(head.textContent, 14.5, 700);
-          mk(ml + 2 + w1m + 16, yy + 9, "1"); mk(ml + Math.max(14, X(val(r)) / 2), by + bh / 2, "2"); mk(8 + whm + 18, yy - gh + 17, "3"); mk(ml + X(val(r)) + 6 + w4m + 16, by + bh / 2, "4"); }
-        else { mk(ml - 10 - w1 - 18, yy + rh / 2 - 1, "1"); mk(ml + Math.max(14, X(val(r)) / 2), yy + rh / 2 - 1, "2"); mk(12 + wh + 20, yy - gh + 18, "3"); mk(ml + X(val(r)) + 6 + w4 + 18, yy + rh / 2 - 1, "4"); }
+        mk(ml - 10 - w1 - 18, yy + rh / 2 - 1, "1"); mk(ml + Math.max(14, X(val(r)) / 2), yy + rh / 2 - 1, "2"); mk(12 + wh + 20, yy - gh + 18, "3"); mk(ml + X(val(r)) + 6 + w4 + 18, yy + rh / 2 - 1, "4");
         first = false;
       }
       g.onclick = () => { xsel = r.i; drawGaps(); window.scrollTo({top: $("x-books").getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth"}); };
       yy += rh;
     });
   });
+  }
   const tn = tech.reduce((s, r) => s + r.n, 0), sn = sch.reduce((s, r) => s + r.n, 0), tp = tech.reduce((s, r) => s + r.pct, 0), sp = sch.reduce((s, r) => s + r.pct, 0);
   $("x-sum").innerHTML = "<b>Что видно на графике.</b> По <b>числу случаев</b> обычных ошибок больше: " + big(tn) + " против " + big(sn) + ". А по <b>сумме налога</b> " + (sp > tp ? "больше схемы" : "больше ошибки") + ": " + fmt(sp.toFixed(2)) + " % всех вычетов против " + fmt(tp.toFixed(2)) + " %. Схемных сделок меньше, но они крупнее. <br><br>По одной паре записей ошибку от схемы не отличить: «продавец не сдал декларацию» бывает и так, и так. Поэтому нужно смотреть, <b>кто продавец</b> и как он ведёт себя в других сделках. Этим и занимаются правила и модели.";
   drawBooks();
@@ -588,9 +836,14 @@ document.querySelectorAll("main svg").forEach(s => { const d = document.createEl
   d.className = "svgwrap" + (s.id === "r-svg" || s.id === "r-svg2" ? " r" : "") + (fit ? " fit" : ""); s.parentNode.insertBefore(d, s); d.appendChild(s);
   if(fit) return;
   const h = document.createElement("div"); h.className = "swipe"; h.textContent = "← схему можно листать пальцем вбок →"; d.parentNode.insertBefore(h, d.nextSibling); });
+mobileUi(isMob());
 drawChain(); drawGroup(); drawRules(); drawGaps();
-let lastMob = window.innerWidth < 700;
-window.addEventListener("resize", () => { const m = window.innerWidth < 700; if(m !== lastMob){ lastMob = m; drawGroup(); drawGaps(); } });
+// переход через 900 px – перерисовать всё; на телефоне – и при любом изменении ширины (поворот экрана)
+let lastMob = isMob(), lastW = window.innerWidth, rzRaf = 0;
+window.addEventListener("resize", () => { if(rzRaf) return; rzRaf = requestAnimationFrame(() => { rzRaf = 0;
+  const m = isMob(), w = window.innerWidth;
+  if(m !== lastMob || (m && w !== lastW)){ if(m !== lastMob) mobileUi(m); lastMob = m; drawChain(); drawGroup(); drawRules(); drawGaps(); }
+  lastW = w; }); });
 show((location.hash || "").slice(1) && document.getElementById(location.hash.slice(1)) ? location.hash.slice(1) : "s-chain");
 </script>
 </body>
